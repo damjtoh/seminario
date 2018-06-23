@@ -1,0 +1,8 @@
+mat-card {
+  width: 450px;
+}
+
+mat-card-footer a{
+  margin:5px;
+  font-size: 10pt;
+}
