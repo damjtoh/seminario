@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MooLoadingComponent } from 'ngx-moorea-components';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { User } from '../core/models';
 
 @Component({
   selector: 'app-login',
@@ -31,9 +32,11 @@ export class LoginComponent implements OnInit {
     const user = this.loginForm.get('user').value;
     const password = this.loginForm.get('password').value;
     this.AuthService.login(user, password)
-      .subscribe(res => {
-        this.router.navigate(['']);
-      }, err =>{
+      .subscribe((res: any) => {
+        console.log("Res: ", res);
+        const user: User = res.user;
+        this.router.navigate([`/${user.role.id}`]);
+      }, err => {
         console.error("Error al autenticar: ", err);
         this.loader.hide()
       })

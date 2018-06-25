@@ -1,4 +1,8 @@
+import { ActivatedRoute } from '@angular/router';
+import { AuthService } from './../auth.service';
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { User } from '../models';
 
 @Component({
   selector: 'app-layout',
@@ -6,10 +10,22 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./layout.component.css']
 })
 export class LayoutComponent implements OnInit {
-
-  constructor() { }
+  public user: Observable<User>;
+  public title: string = 'Cargando...';
+  constructor(
+    private AuthService: AuthService,
+    private route: ActivatedRoute
+  ) {
+    this.user = AuthService.getUser();
+    console.log("Route: ", route);
+    route.children[0].data.subscribe(res => this.title = res.title);
+  }
 
   ngOnInit() {
+  }
+
+  logout() {
+    this.AuthService.logout();
   }
 
 }

@@ -1,0 +1,35 @@
+<moo-loading #loader>
+  <form (ngSubmit)="generarIndicacion()" fxLayoutAlign="center stretch" fxLayout="column" [formGroup]="generarIndicacionForm">
+    <mat-form-field>
+      <mat-select placeholder="Paciente" formControlName="paciente">
+        <mat-option *ngFor="let paciente of pacientes" [value]="paciente.dni">
+          {{ paciente.nombre }} {{ paciente.apellido }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <input type="textarea" matInput placeholder="Diagnostico" formControlName="diagnostico" />
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Medicamento" aria-label="Medicamento" [matAutocomplete]="auto" formControlName="medicamento">
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let medicamento of filteredMedicamentos | async" [value]="medicamento.nombre">
+          {{medicamento.nombre}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field>
+      <input type="number" matInput placeholder="Cantidad" formControlName="cantidad">
+    </mat-form-field>
+    <mat-form-field>
+      <input type="number" matInput placeholder="Frecuencia" formControlName="frecuencia">
+      <mat-select formControlName="horas">
+        <mat-option *ngFor="let hora of horas" [value]="hora.id">
+          {{ hora.text }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button type="submit" mat-raised-button color="primary">Indicar medicamentos</button>
+    <button type="submit" mat-button color="warn">Cancelar</button>
+  </form>
+</moo-loading>

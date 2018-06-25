@@ -1,10 +1,17 @@
-<mat-sidenav-container>
-  <mat-sidenav opened="true" mode="side">
+<mat-sidenav-container fullscreen fxLayout="row">
+  <mat-sidenav opened="true" mode="side" fxFlex="40 40">
     <h1>My App</h1>
+    <div class="profile">
+      <h3>{{(user |async).name}}</h3>
+      <h4>{{(user |async).role.description}}</h4>
+    </div>
   </mat-sidenav>
-  <mat-sidenav-content>
+  <mat-sidenav-content fxFlex="60 60">
     <mat-toolbar>
-      <h2>Sección</h2>
+      <h2>{{title}}</h2>
+      <button type="button" mat-button color="primary" (click)="logout()">
+        <mat-icon>input</mat-icon>Salir
+      </button>
     </mat-toolbar>
     <div class="content">
       <router-outlet></router-outlet>

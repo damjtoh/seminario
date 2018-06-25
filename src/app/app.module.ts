@@ -4,9 +4,14 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
+import {MatIconModule} from '@angular/material/icon';
+
+
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { LoginModule } from './login/login.module';
+import { MedicoModule } from './medico/medico.module';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -17,7 +22,10 @@ import { LoginModule } from './login/login.module';
     CoreModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(routes),
-    LoginModule
+    LoginModule,
+    MatIconModule,
+    MedicoModule,
+    MatSelectModule
   ],
   providers: [],
   bootstrap: [AppComponent]
