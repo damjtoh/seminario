@@ -21,7 +21,7 @@ export class AuthService {
   private _getUser(): User {
     try {
       return JSON.parse(localStorage.getItem('user'))
-    } catch(e) {
+    } catch (e) {
       return null;
     }
   }
@@ -33,6 +33,8 @@ export class AuthService {
       const response = {
         token: 'abee818d-9fa9-4a58-826a-1daa15f94863',
         user: {
+          id: 'abee818d-9fa9-4a58-826a-1daa15f94863',
+          dni: '37356501',
           name: 'Pepe itaka',
           username: user,
           role: {

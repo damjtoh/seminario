@@ -20,7 +20,10 @@ export class RoleGuard implements CanActivate {
         map((user: User) => {
           console.log("Guard user: ", user);
           const isLogged = !!(user !== null)
+          console.log("Is logged in: ", isLogged);
+          console.log("Route: ", route);
           if (!isLogged) {
+            if (route.routeConfig.path === 'login') return true;
             this.Router.navigate(['/login']);
             return false;
           } else {

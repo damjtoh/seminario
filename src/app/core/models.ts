@@ -1,6 +1,8 @@
 export interface User {
   name: string,
   username: string,
+  dni: string,
+  id: string,
   role: FarmaceuticoRole | MedicoRole
 }
 
