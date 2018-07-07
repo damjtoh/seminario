@@ -1,3 +1,3 @@
 <mat-nav-list>
-  <a mat-list-item [routerLink]="[section.path]" *ngFor="let section of menuSections[role]"> {{ section.description }} </a>
+  <a mat-list-item [routerLink]="[section.path]" routerLinkActive="active" *ngFor="let section of menuSections[role]"> {{ section.description }} </a>
 </mat-nav-list>
