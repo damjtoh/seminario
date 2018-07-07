@@ -13,7 +13,7 @@ export class MedicoService {
     private http: HttpClient
   ) { }
 
-  guardarIndicación({ medicoId, indicacion }) {
+  guardarIndicacion({ medicoId, indicacion }) {
     if (environment.production)
       return this.http.post(`${environment.BASE_URL}/medicos/indicaciones`, { medicoId, indicacion })
     else
