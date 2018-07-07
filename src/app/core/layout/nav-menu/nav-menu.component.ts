@@ -20,9 +20,37 @@ export class NavMenuComponent implements OnInit {
     ],
     farmaceutico: [
       {
-        path: '',
-        description: ''
-      }
+        path: 'alta-medicamentos',
+        description: 'Alta de medicamentos'
+      },
+      {
+        path: 'modificacion-medicamentos',
+        description: 'Modificacion de medicamentos'
+      },
+      {
+        path: 'baja-medicamentos',
+        description: 'Baja de medicamentos'
+      },
+      {
+        path: 'indicaciones-pendientes',
+        description: 'Indicaciones pendientes'
+      },
+      {
+        path: 'indicaciones-validadas',
+        description: 'Indicaciones válidadas'
+      },
+      {
+        path: 'solocitar-compras',
+        description: 'Solicitar compras'
+      },
+      {
+        path: 'reporte-stock',
+        description: 'Reporte de Stock'
+      },
+      {
+        path: 'medicamentos-otorgados',
+        description: 'Medicamentos otorgados'
+      },
     ]
   }
   constructor() { }
