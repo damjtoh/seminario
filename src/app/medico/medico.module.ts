@@ -8,7 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FlexLayoutModule, CoreModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
-import { MooLoadingModule } from 'ngx-moorea-components';
+import { MooLoadingModule, MooNotificationModule } from 'ngx-moorea-components';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -32,7 +32,8 @@ import { MatTableModule } from '@angular/material/table';
     MatAutocompleteModule,
     HttpClientModule,
     MatListModule,
-    MatTableModule
+    MatTableModule,
+    MooNotificationModule
   ],
   declarations: [GenerarIndicacionComponent]
 })

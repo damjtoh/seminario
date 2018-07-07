@@ -12,6 +12,7 @@ import { CoreModule } from './core/core.module';
 import { LoginModule } from './login/login.module';
 import { MedicoModule } from './medico/medico.module';
 import { MatSelectModule } from '@angular/material/select';
+import { MooNotificationModule } from 'ngx-moorea-components';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { MatSelectModule } from '@angular/material/select';
     LoginModule,
     MatIconModule,
     MedicoModule,
-    MatSelectModule
+    MatSelectModule,
+    MooNotificationModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

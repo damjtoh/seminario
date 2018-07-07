@@ -3999,9 +3999,9 @@ ngx-cookie@^4.0.2:
   dependencies:
     tslib "^1.9.0"
 
-ngx-moorea-components@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/ngx-moorea-components/-/ngx-moorea-components-0.0.4.tgz#07cd9e24e6fe35ea5662460065d2d52613cac3e8"
+ngx-moorea-components@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/ngx-moorea-components/-/ngx-moorea-components-0.1.0.tgz#47e80c22c49d31e01cf958215b43515c6932a130"
   dependencies:
     tslib "^1.7.1"
 
