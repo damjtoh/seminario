@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms'
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-import { MooLoadingComponent } from 'ngx-moorea-components';
+import { MooLoadingComponent, MooNotificationService } from 'ngx-moorea-components';
 import { MedicoService } from '../medico.service';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -53,7 +53,8 @@ export class GenerarIndicacionComponent implements OnInit {
   constructor(
     private FormBuilder: FormBuilder,
     private MedicoService: MedicoService,
-    private AuthService: AuthService
+    private AuthService: AuthService,
+    private NotificationService: MooNotificationService
   ) {
     this.generarIndicacionForm = FormBuilder.group({
       paciente: new FormControl('', Validators.required),
@@ -78,14 +79,19 @@ export class GenerarIndicacionComponent implements OnInit {
 
   generarIndicacion() {
     this.loader.show();
-    let medicoId: string;
-    this.AuthService.getUser().subscribe(user => medicoId = user.id);
-    const indicacion = this.generarIndicacionForm.value
-    this.MedicoService.guardarIndicacion({ medicoId, indicacion })
-      .subscribe(res => {
-        this.loader.hide();
-      })
-    console.log("About to generar indicación: ", this.generarIndicacionForm.value);
+    if (this.generarIndicacionForm.valid) {
+      let medicoId: string;
+      this.AuthService.getUser().subscribe(user => medicoId = user.id);
+      const indicacion = this.generarIndicacionForm.value
+      this.MedicoService.guardarIndicacion({ medicoId, indicacion })
+        .subscribe(res => {
+          this.loader.hide();
+        })
+      console.log("About to generar indicación: ", this.generarIndicacionForm.value);
+    } else {
+      this.NotificationService.error("Formulario inválido");
+      this.loader.hide();
+    }
   }
 
   filterMedicamento(name: string) {
