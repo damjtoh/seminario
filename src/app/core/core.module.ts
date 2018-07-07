@@ -1,3 +1,4 @@
+import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from './auth.service';
 import { NgModule } from '@angular/core';
@@ -9,6 +10,8 @@ import { RouterModule } from '@angular/router';
 import { CookieModule } from 'ngx-cookie';
 import { MatIconModule } from '@angular/material/icon';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { NavMenuComponent } from './layout/nav-menu/nav-menu.component';
+import { MatDividerModule } from '@angular/material/divider';
 
 
 @NgModule({
@@ -21,9 +24,11 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatIconModule,
     MatButtonModule,
     FlexLayoutModule,
+    MatListModule,
+    MatDividerModule
   ],
   providers: [AuthService],
-  declarations: [LayoutComponent],
+  declarations: [LayoutComponent, NavMenuComponent],
   exports: [LayoutComponent]
 })
 export class CoreModule { }

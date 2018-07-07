@@ -1,3 +1,7 @@
 mat-sidenav-container {
   display: flex;
 }
+
+.content {
+  padding: 0 30px;
+}
