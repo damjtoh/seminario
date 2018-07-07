@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MooLoadingComponent } from 'ngx-moorea-components';
 import { MedicoService } from '../medico.service';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-generar-indicacion',
@@ -37,11 +38,18 @@ export class GenerarIndicacionComponent implements OnInit {
     }
   ]
 
-  public horas: any[] = [
+  public unidadesTiempo: any[] = [
     { id: 'hora', text: 'Hora/s' },
     { id: 'minuto', text: 'Minuto/s' },
   ];
   public filteredMedicamentos: Observable<Medicamento[]>;
+  public medicamentosForm: FormGroup;
+  public medicamentosIndicados = new MatTableDataSource(
+    [
+      { cantidad: 23, frecuencia: 23, medicamento: "Ibuprofeno 800", unidad: "hora" }
+    ]);
+  public displayedColumns: string[] = ['medicamento', 'cantidad', 'frecuencia', 'unidad'];
+
   constructor(
     private FormBuilder: FormBuilder,
     private MedicoService: MedicoService,
@@ -50,12 +58,14 @@ export class GenerarIndicacionComponent implements OnInit {
     this.generarIndicacionForm = FormBuilder.group({
       paciente: new FormControl('', Validators.required),
       diagnostico: new FormControl('', Validators.required),
+    })
+    this.medicamentosForm = FormBuilder.group({
       medicamento: new FormControl('', Validators.required),
       cantidad: new FormControl('', Validators.required),
       frecuencia: new FormControl('', Validators.required),
-      horas: new FormControl('', Validators.required),
+      unidad: new FormControl('', Validators.required),
     })
-    this.filteredMedicamentos = this.generarIndicacionForm.get('medicamento').valueChanges
+    this.filteredMedicamentos = this.medicamentosForm.get('medicamento').valueChanges
       .pipe(
         startWith(''),
         map(medicamento => medicamento ? this.filterMedicamento(medicamento) : this.medicamentos.slice())
@@ -71,10 +81,10 @@ export class GenerarIndicacionComponent implements OnInit {
     let medicoId: string;
     this.AuthService.getUser().subscribe(user => medicoId = user.id);
     const indicacion = this.generarIndicacionForm.value
-    this.MedicoService.guardarIndicación({medicoId, indicacion})
-    .subscribe(res => {
-      this.loader.hide();
-    })
+    this.MedicoService.guardarIndicacion({ medicoId, indicacion })
+      .subscribe(res => {
+        this.loader.hide();
+      })
     console.log("About to generar indicación: ", this.generarIndicacionForm.value);
   }
 
@@ -83,8 +93,17 @@ export class GenerarIndicacionComponent implements OnInit {
       medicamento.nombre.toLowerCase().indexOf(name.toLowerCase()) === 0);
   }
 
-  cancelar() {
+  agregarMedicamento(form: FormGroup) {
+    console.log("Evnet: ", form);
+    console.log("Form value: ", this.medicamentosForm.value);
+    const data = this.medicamentosIndicados.data;
+    data.push(this.medicamentosForm.value);
+    this.medicamentosIndicados.data = data;
+    console.log("Updated list: ", this.medicamentosIndicados);
+  }
 
+  cancelar() {
+    //todo reset form
   }
 
 }
