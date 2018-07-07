@@ -30,6 +30,15 @@ export class AuthService {
     if (environment.production) {
 
     } else {
+      let role = { id: 'medico', description: 'Médico' };
+      switch (user) {
+        case 'farmaceutico':
+          role = { id: 'farmaceutico', description: 'Farmaceutico' }
+          break;
+        case 'enfermero':
+          role = { id: 'enfermero', description: 'Enfermero' }
+          break;
+      }
       const response = {
         token: 'abee818d-9fa9-4a58-826a-1daa15f94863',
         user: {
@@ -37,10 +46,7 @@ export class AuthService {
           dni: '37356501',
           name: 'Pepe itaka',
           username: user,
-          role: {
-            id: 'medico',
-            description: 'Médico'
-          }
+          role
         }
       };
       return of(response).pipe(delay(5000));
