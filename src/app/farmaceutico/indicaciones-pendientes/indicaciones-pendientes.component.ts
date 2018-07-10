@@ -1,15 +1,65 @@
 import { Component, OnInit } from '@angular/core';
 
+const indicaciones: any[] =
+  [
+    {
+      codigoIndicacion: "1",
+      paciente: {
+        dni: '37356501',
+        nombre: 'Damián',
+        apellido: 'Crespi'
+      },
+      medicamentos: [
+        {
+          cantidad: 23,
+          frecuencia: 23,
+          medicamento: "Ibuprofeno 800",
+          unidad: "hora",
+        },
+        {
+          cantidad: 5,
+          frecuencia: 1,
+          medicamento: "Next",
+          unidad: "hora",
+        },
+      ]
+    },
+    {
+      codigoIndicacion: "2",
+      paciente: {
+        dni: '37356501',
+        nombre: 'Damián',
+        apellido: 'Crespi'
+      },
+      medicamentos: [
+        {
+          cantidad: 23,
+          frecuencia: 23,
+          medicamento: "Ibuprofeno 800",
+          unidad: "hora",
+        },
+        {
+          cantidad: 5,
+          frecuencia: 1,
+          medicamento: "Next",
+          unidad: "hora",
+        },
+      ]
+    }
+  ]
+
 @Component({
   selector: 'app-indicaciones-pendientes',
   templateUrl: './indicaciones-pendientes.component.html',
   styleUrls: ['./indicaciones-pendientes.component.css']
 })
 export class IndicacionesPendientesComponent implements OnInit {
-
+  public indicaciones: any[] = [];
+  public displayedColumns: string[] = ['medicamento', 'cantidad', 'frecuencia'];
   constructor() { }
 
   ngOnInit() {
+    this.indicaciones = indicaciones;
   }
 
 }
