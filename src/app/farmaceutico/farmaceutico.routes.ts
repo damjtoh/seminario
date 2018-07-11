@@ -1,3 +1,4 @@
+import { IndicacionesValidadasComponent } from './indicaciones-validadas/indicaciones-validadas.component';
 import { IndicacionesPendientesComponent } from './indicaciones-pendientes/indicaciones-pendientes.component';
 import { RoleGuard } from './../core/role.guard';
 import { LayoutComponent } from './../core/layout/layout.component';
@@ -14,6 +15,7 @@ export const farmaceuticoRoutes: Routes = [
     children: [
       { path: '', redirectTo: 'indicaciones-pendientes', pathMatch: 'full' },
       { path: 'indicaciones-pendientes', component: IndicacionesPendientesComponent, data: { title: 'Indicaciones pendientes' } },
+      { path: 'indicaciones-validadas', component: IndicacionesValidadasComponent, data: { title: 'Indicaciones validadas' } },
       { path: 'indicaciones/:codigoIndicacion/validar', component: IndicacionesValidarComponent, data: { title: 'Validar indicación' } }
     ]
   }

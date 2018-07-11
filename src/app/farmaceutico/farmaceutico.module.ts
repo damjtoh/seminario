@@ -11,7 +11,10 @@ import { IndicacionesPendientesComponent } from './indicaciones-pendientes/indic
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '../../../node_modules/@angular/flex-layout';
 import { IndicacionesValidarComponent } from './indicaciones-validar/indicaciones-validar.component';
-import { ReactiveFormsModule } from '../../../node_modules/@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '../../../node_modules/@angular/forms';
+import { MooLoadingModule, MooNotificationModule } from '../../../node_modules/ngx-moorea-components';
+import { IndicacionesValidadasComponent } from './indicaciones-validadas/indicaciones-validadas.component';
+import { MatCheckboxModule } from '../../../node_modules/@angular/material';
 
 @NgModule({
   imports: [
@@ -25,7 +28,11 @@ import { ReactiveFormsModule } from '../../../node_modules/@angular/forms';
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
+    MooLoadingModule,
+    MooNotificationModule,
+    MatCheckboxModule,
+    FormsModule
   ],
-  declarations: [IndicacionesPendientesComponent, IndicacionesValidarComponent]
+  declarations: [IndicacionesPendientesComponent, IndicacionesValidarComponent, IndicacionesValidadasComponent]
 })
 export class FarmaceuticoModule { }

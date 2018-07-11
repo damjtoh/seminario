@@ -3,9 +3,7 @@
     <mat-card class="indicacion" *ngFor="let indicacion of indicaciones" fxFlex="50%">
       <mat-card-title class="paciente">
         {{indicacion.paciente.nombre}} {{indicacion.paciente.apellido}}
-        <button type="button" mat-button color="primary" fxFlex="20%" fxFlexOffset="60%" [routerLink]="['/farmaceutico', 'indicaciones', indicacion.codigoIndicacion, 'validar']">
-          <mat-icon>visibility</mat-icon>VER
-        </button>
+        <mat-checkbox [(ngModel)]="indicacion.checked"></mat-checkbox>
       </mat-card-title>
       <mat-card-content>
         <table mat-table [dataSource]="indicacion.medicamentos">
@@ -32,5 +30,9 @@
         </table>
       </mat-card-content>
     </mat-card>
+  </div>
+  <div class="acciones">
+    <button type="button" mat-raised-button color="primary" (click)="enviar()">Enviar</button>
+    <button type="button" (click)="goToDashboard()" mat-button color="warn">Cancelar</button>
   </div>
 </moo-loading>

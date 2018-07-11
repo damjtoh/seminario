@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { FarmaceuticoService  FarmaceuticoService } from './../farmaceutico.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { EstadoIndicaciones } from '../farmaceutico.model';
+import { MooLoadingComponent } from '../../../../node_modules/ngx-moorea-components';
 
-const indicaciones: any[] =
+export const indicaciones: any[] =
   [
     {
       codigoIndicacion: "1",
@@ -54,12 +57,20 @@ const indicaciones: any[] =
   styleUrls: ['./indicaciones-pendientes.component.css']
 })
 export class IndicacionesPendientesComponent implements OnInit {
+  @ViewChild("loader") loader: MooLoadingComponent;
   public indicaciones: any[] = [];
   public displayedColumns: string[] = ['medicamento', 'cantidad', 'frecuencia'];
-  constructor() { }
+  constructor(
+    private FarmaceuticoService: FarmaceuticoService
+  ) { }
 
   ngOnInit() {
-    this.indicaciones = indicaciones;
+    this.loader.show();
+    this.FarmaceuticoService.obtenerIndicaciones(EstadoIndicaciones.PENDIENTE)
+      .subscribe(indicaciones => {
+        this.indicaciones = indicaciones;
+        this.loader.hide();
+      });
   }
 
 }

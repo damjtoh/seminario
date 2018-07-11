@@ -17,9 +17,9 @@ export class MedicoService {
     if (environment.production)
       return this.http.post(`${environment.BASE_URL}/medicos/indicaciones`, { medicoId, indicacion })
     else
-      return of({ message: 'Éxito al generar la indicación' })
+      return of('Éxito al generar la indicación')
         .pipe(
           delay(3000)
-        );
+        )
   }
 }
