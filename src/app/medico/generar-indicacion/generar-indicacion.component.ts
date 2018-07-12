@@ -82,12 +82,12 @@ export class GenerarIndicacionComponent implements OnInit {
     if (this.generarIndicacionForm.valid) {
       let medicoId: string;
       this.AuthService.getUser().subscribe(user => medicoId = user.id);
-      const indicacion = this.generarIndicacionForm.value
+      const indicacion = { ...this.generarIndicacionForm.value, medicamentos: this.medicamentosIndicados.data }
+      console.log("About to generar indicación: ", indicacion);
       this.MedicoService.guardarIndicacion({ medicoId, indicacion })
         .subscribe(res => {
           this.loader.hide();
         })
-      console.log("About to generar indicación: ", this.generarIndicacionForm.value);
     } else {
       this.NotificationService.error("Formulario inválido");
       this.loader.hide();
