@@ -1,10 +1,10 @@
-import { indicaciones } from './../indicaciones-pendientes/indicaciones-pendientes.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MooLoadingComponent, MooNotificationService } from '../../../../node_modules/ngx-moorea-components';
-import { FarmaceuticoService } from '../farmaceutico.service';
-import { EstadoIndicaciones } from '../farmaceutico.model';
-import { map } from '../../../../node_modules/rxjs/operators';
-import { Router } from '../../../../node_modules/@angular/router';
+import { MooLoadingComponent, MooNotificationService } from 'ngx-moorea-components';
+import { map } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { IndicacionesService } from '../../indicaciones/indicaciones.service';
+import { EstadoIndicaciones } from '../../farmaceutico/farmaceutico.model';
+
 @Component({
   selector: 'app-indicaciones-validadas',
   templateUrl: './indicaciones-validadas.component.html',
@@ -15,7 +15,7 @@ export class IndicacionesValidadasComponent implements OnInit {
   public indicaciones: any[] = [];
   public displayedColumns: string[] = ['medicamento', 'cantidad', 'frecuencia'];
   constructor(
-    private FarmaceuticoService: FarmaceuticoService,
+    private IndicacionesService: IndicacionesService,
     private NotificationService: MooNotificationService,
     private Router: Router
   ) { }
@@ -26,7 +26,7 @@ export class IndicacionesValidadasComponent implements OnInit {
 
   obtenerIndicaciones() {
     this.loader.show();
-    this.FarmaceuticoService.obtenerIndicaciones(EstadoIndicaciones.VALIDADO)
+    this.IndicacionesService.obtener(EstadoIndicaciones.VALIDADO)
       .pipe(
         map(indicaciones => indicaciones.map(i => ({ ...i, checked: false })))
       )
@@ -44,7 +44,7 @@ export class IndicacionesValidadasComponent implements OnInit {
     if (codigosIndicaciones.length === 0) this.NotificationService.error("Debe seleccionar al menos una indicación");
     else {
       this.loader.show();
-      this.FarmaceuticoService.enviarIndicaciones(codigosIndicaciones)
+      this.IndicacionesService.enviar(codigosIndicaciones)
         .subscribe(
           (message: string) => {
             this.NotificationService.success(message);

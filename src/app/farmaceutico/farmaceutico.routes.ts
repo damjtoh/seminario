@@ -1,9 +1,9 @@
-import { IndicacionesValidadasComponent } from './indicaciones-validadas/indicaciones-validadas.component';
-import { IndicacionesPendientesComponent } from './indicaciones-pendientes/indicaciones-pendientes.component';
 import { RoleGuard } from './../core/role.guard';
 import { LayoutComponent } from './../core/layout/layout.component';
 import { Routes } from '@angular/router';
-import { IndicacionesValidarComponent } from './indicaciones-validar/indicaciones-validar.component';
+import { IndicacionesPendientesComponent } from '../indicaciones/indicaciones-pendientes/indicaciones-pendientes.component';
+import { IndicacionesValidadasComponent } from '../indicaciones/indicaciones-validadas/indicaciones-validadas.component';
+import { IndicacionesValidarComponent } from '../indicaciones/indicaciones-validar/indicaciones-validar.component';
 export const farmaceuticoRoutes: Routes = [
   {
     path: 'farmaceutico',

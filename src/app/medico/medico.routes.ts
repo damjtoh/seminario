@@ -1,7 +1,8 @@
+import { IndicacionesRechazadasComponent } from './../indicaciones/indicaciones-rechazadas/indicaciones-rechazadas.component';
 import { RoleGuard } from './../core/role.guard';
 import { LayoutComponent } from './../core/layout/layout.component';
-import { GenerarIndicacionComponent } from './generar-indicacion/generar-indicacion.component';
 import { Routes } from '@angular/router';
+import { IndicacionesGenerarComponent } from '../indicaciones/indicaciones-generar/indicaciones-generar.component';
 export const medicoRoutes: Routes = [
   {
     path: 'medico',
@@ -12,7 +13,8 @@ export const medicoRoutes: Routes = [
     },
     children: [
       { path: '', redirectTo: 'generar-indicacion', pathMatch: 'full' },
-      { path: 'generar-indicacion', component: GenerarIndicacionComponent, data: {title: 'Generar indicación'} }
+      { path: 'generar-indicacion', component: IndicacionesGenerarComponent, data: {title: 'Generar indicación'} },
+      { path: 'indicaciones-rechazadas', component: IndicacionesRechazadasComponent, data: { title: 'Indicaciones rechazadas' } },
     ]
   }
 ]
