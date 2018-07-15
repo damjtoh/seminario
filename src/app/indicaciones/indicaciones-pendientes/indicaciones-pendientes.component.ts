@@ -18,7 +18,7 @@ export class IndicacionesPendientesComponent implements OnInit {
 
   ngOnInit() {
     this.loader.show();
-    this.IndicacionesService.obtener(EstadoIndicaciones.PENDIENTE)
+    this.IndicacionesService.obtenerPorEstado(EstadoIndicaciones.PENDIENTE)
       .subscribe(indicaciones => {
         this.indicaciones = indicaciones;
         this.loader.hide();

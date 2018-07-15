@@ -4,6 +4,10 @@ import { Router } from '@angular/router';
 import { MooNotificationService, MooLoadingComponent } from 'ngx-moorea-components';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IndicacionesService } from '../../indicaciones/indicaciones.service';
+import { map } from '../../../../node_modules/rxjs/operators';
+import { from } from '../../../../node_modules/rxjs';
+import { User } from '../../core/models';
+import { AuthService } from '../../core/auth.service';
 
 @Component({
   selector: 'app-dosis',
@@ -12,8 +16,9 @@ import { IndicacionesService } from '../../indicaciones/indicaciones.service';
 })
 export class DosisComponent implements OnInit {
   @ViewChild("loader") loader: MooLoadingComponent;
-  public dosis:any[] =[
+  public dosis: any[] = [
     {
+      codigoDosis: '1',
       paciente: {
         dni: '37356501',
         nombre: 'Damián',
@@ -30,7 +35,8 @@ export class DosisComponent implements OnInit {
     private IndicacionesService: IndicacionesService,
     private NotificationService: MooNotificationService,
     private Router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private AuthService: AuthService
   ) { }
 
   ngOnInit() {
@@ -38,6 +44,24 @@ export class DosisComponent implements OnInit {
 
   getDosis() {
     return this.http.get(`${environment.BASE_URL}`)
+  }
+
+  aplicar() {
+    this.loader.show();
+    const codigosDosis = this.dosis.filter(i => i.checked).map(i => i.codigoDosis);
+    return this.AuthService.getUser()
+      .toPromise()
+      .then((user: User) => {
+        const email = user.email;
+        from(codigosDosis)
+          .pipe(
+            map(codigo => this.http.post<any>(`${environment.BASE_URL}/dosis/${codigo}/email=${email}`, {}))
+          ).subscribe(res => {
+            this.NotificationService.success("Éxito al registrar las dosis");
+            this.loader.hide();
+            this.getDosis();
+          })
+      });
   }
 
 }

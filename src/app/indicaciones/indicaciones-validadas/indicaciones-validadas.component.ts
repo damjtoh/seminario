@@ -26,7 +26,7 @@ export class IndicacionesValidadasComponent implements OnInit {
 
   obtenerIndicaciones() {
     this.loader.show();
-    this.IndicacionesService.obtener(EstadoIndicaciones.VALIDADO)
+    this.IndicacionesService.obtenerPorEstado(EstadoIndicaciones.VALIDADO)
       .pipe(
         map(indicaciones => indicaciones.map(i => ({ ...i, checked: false })))
       )

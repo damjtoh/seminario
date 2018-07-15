@@ -1,9 +1,12 @@
+import { AuthService } from './../core/auth.service';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
-import { of, Observable } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { of, Observable, from } from 'rxjs';
+import { _throw } from 'rxjs/observable/throw'
+import { delay, map, flatMap } from 'rxjs/operators';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Paciente, Medicamento } from './indicaciones-generar/indicaciones-generar.component';
+import { Paciente, Medicamento, Indicacion } from './indicaciones-generar/indicaciones-generar.component';
+import { User } from '../core/models';
 
 const indicaciones: any[] =
   [
@@ -38,12 +41,14 @@ const indicaciones: any[] =
       },
       medicamentos: [
         {
+          medicamentoId: 1,
           cantidad: 23,
           frecuencia: 23,
           medicamento: "Ibuprofeno 800",
           unidad: "hora",
         },
         {
+          medicamentoId: 2,
           cantidad: 5,
           frecuencia: 1,
           medicamento: "Next",
@@ -65,11 +70,13 @@ const pacientes = [
 
 const medicamentos: Medicamento[] = [
   {
+    medicamentoId: '1',
     nombre: 'Ibuprofeno 800',
     stockActual: 10,
     stockOptimo: 5
   },
   {
+    medicamentoId: '2',
     nombre: 'Next 800',
     stockActual: 10,
     stockOptimo: 5
@@ -80,12 +87,13 @@ const medicamentos: Medicamento[] = [
 export class IndicacionesService {
   constructor(
     private http: HttpClient,
+    private AuthService: AuthService
   ) { }
-  obtener(estado): Observable<any[]> {
+  obtenerPorEstado(estado): Observable<any[]> {
     let params = new HttpParams()
       .set('estado', estado);
     if (environment.production)
-      return this.http.get<any[]>(`${environment.BASE_URL}/indicaciones`, { params })
+      return this.http.get<any[]>(`${environment.BASE_URL}/indicaciones/search`, { params })
     else
       return of(indicaciones)
         .pipe(
@@ -95,7 +103,7 @@ export class IndicacionesService {
 
   obtenerPorCodigo(codigoIndicacion): Observable<any> {
     if (environment.production)
-      return this.http.get(`${environment.BASE_URL}/indicaciones/codigoIndicacion`)
+      return this.http.get(`${environment.BASE_URL}/indicaciones/${codigoIndicacion}`)
     else
       return of(indicaciones[0])
         .pipe(
@@ -103,7 +111,7 @@ export class IndicacionesService {
         )
   }
 
-  generar(indicacion) {
+  generar2(indicacion) {
     if (environment.production)
       return this.http.post(`${environment.BASE_URL}/indicaciones`, { ...indicacion })
     else
@@ -112,10 +120,52 @@ export class IndicacionesService {
           delay(3000)
         )
   }
-  validar(codigoIndicacion) {
-    if (environment.production)
-      return this.http.put(`${environment.BASE_URL}/indicaciones/${codigoIndicacion}`, { estado: 'VALIDADO' })
+
+
+  generar(indicacion: Indicacion): Observable<any> {
+    if (environment.production) {
+      let postIndicacion = { dni: indicacion.paciente.dni, diag: indicacion.diagnostico };
+      return this.http.put(`${environment.BASE_URL}/indicaciones`, postIndicacion)
+        .pipe(
+          flatMap((res: any) => this.http.post(`${environment.BASE_URL}/indicaciones/${res.codigoIndicacion}/items`, indicacion.medicamentos)),
+          flatMap((res: any) => {
+            return this.AuthService.getUser()
+              .toPromise()
+              .then((user: User) => {
+                const email = user.email;
+                return this.http.put(`${environment.BASE_URL}/indicaciones/${res.codigoIndicacion}?email=${email}`, {})
+              })
+          })
+        )
+    }
     else
+      return of('Éxito al generar la indicación')
+        .pipe(
+          delay(3000)
+        )
+  }
+
+  modificarRechazada(codigoIndicacion: string, medicamentos: any[]) {
+    if (environment.production) {
+      return this.http.post(`${environment.BASE_URL}/indicaciones/${codigoIndicacion}`, { medicamentos })
+    } else {
+      return of('Éxito al generar la indicación')
+        .pipe(
+          delay(3000)
+        )
+    }
+  }
+
+
+  validar(codigoIndicacion) {
+    if (environment.production) {
+      return this.AuthService.getUser()
+        .toPromise()
+        .then((user: User) => {
+          const email = user.email;
+          return this.http.put(`${environment.BASE_URL}/indicaciones/${codigoIndicacion}/validate?email=${email}`, {})
+        })
+    } else
       return of('Éxito al validar la indicación')
         .pipe(
           delay(1000)
@@ -131,9 +181,31 @@ export class IndicacionesService {
         );
   }
 
-  enviar(codigosIndicaciones: any[]): Observable<any> {
-    if (environment.production)
-      return this.http.put<any[]>(`${environment.BASE_URL}/indicaciones/enviar`, { codigosIndicaciones })
+  enviar(codigosIndicaciones: string[]): Observable<any> {
+    if (environment.production) {
+      return from(codigosIndicaciones)
+        .pipe(
+          map(codigo => this.http.post<any[]>(`${environment.BASE_URL}/indicaciones/${codigo}/send`, {}))
+        )
+    }
+    else
+      return of('Éxito al enviar las indicaciones')
+        .pipe(
+          delay(1000)
+        );
+  }
+  aceptar(codigosIndicaciones: string[]): Observable<any> {
+    if (environment.production) {
+      this.AuthService.getUser()
+        .toPromise()
+        .then((user: User) => {
+          const email = user.email;
+          return from(codigosIndicaciones)
+            .pipe(
+              map(codigo => this.http.post<any>(`${environment.BASE_URL}/indicaciones/${codigo}/accept?email=${email}`, {}))
+            )
+        });
+    }
     else
       return of('Éxito al enviar las indicaciones')
         .pipe(

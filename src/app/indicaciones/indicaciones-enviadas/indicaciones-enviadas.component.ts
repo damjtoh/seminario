@@ -26,7 +26,7 @@ export class IndicacionesEnviadasComponent implements OnInit {
 
   obtenerIndicaciones() {
     this.loader.show();
-    this.IndicacionesService.obtener(EstadoIndicaciones.VALIDADO)
+    this.IndicacionesService.obtenerPorEstado(EstadoIndicaciones.VALIDADO)
       .pipe(
         map(indicaciones => indicaciones.map(i => ({ ...i, checked: false })))
       )
@@ -37,14 +37,14 @@ export class IndicacionesEnviadasComponent implements OnInit {
       });
   }
 
-  enviar() {
+  aceptar() {
     console.log("Indicaciones: ", this.indicaciones);
     const codigosIndicaciones = this.indicaciones.filter(i => i.checked).map(i => i.codigoIndicacion);
     console.log("Codigos: ", codigosIndicaciones);
     if (codigosIndicaciones.length === 0) this.NotificationService.error("Debe seleccionar al menos una indicación");
     else {
       this.loader.show();
-      this.IndicacionesService.enviar(codigosIndicaciones)
+      this.IndicacionesService.aceptar(codigosIndicaciones)
         .subscribe(
           (message: string) => {
             this.NotificationService.success(message);

@@ -57,7 +57,7 @@ export class IndicacionesRechazadasComponent implements OnInit {
 
   ngOnInit() {
     this.loader.show();
-    this.IndicacionesService.obtener(EstadoIndicaciones.RECHAZADA)
+    this.IndicacionesService.obtenerPorEstado(EstadoIndicaciones.RECHAZADA)
       .subscribe(indicaciones => {
         this.indicaciones = indicacionesRechazadas;
         this.loader.hide();

@@ -23,6 +23,7 @@ export class IndicacionesGenerarComponent implements OnInit {
   public currentEditIndex: number;
   // 
   public mode: 'MODIFY' | 'GENERATE' = 'MODIFY';
+  public codigoIndicacion: string;
   public unidadesTiempo: any[] = [
     { id: 'hora', text: 'Hora/s' },
     { id: 'minuto', text: 'Minuto/s' },
@@ -68,6 +69,7 @@ export class IndicacionesGenerarComponent implements OnInit {
   ngOnInit() {
     if (this.mode === 'MODIFY') {
       this.loader.show();
+      this.codigoIndicacion = this.route.params['codigoIndicacion'];
       this.displayedColumns.push('acciones');
       this.IndicacionesService.obtenerMedicamentos().subscribe((medicamentos: Medicamento[]) => this.medicamentos = medicamentos);
       this.IndicacionesService.obtenerPorCodigo('pepe')
@@ -100,13 +102,21 @@ export class IndicacionesGenerarComponent implements OnInit {
       return;
     }
     this.loader.show();
+
     if (this.generarIndicacionForm.valid || this.generarIndicacionForm.disabled) {
-      const indicacion = { ...this.generarIndicacionForm.value, medicamentos: this.medicamentosIndicados.data }
-      console.log("About to generar indicación: ", indicacion);
-      this.IndicacionesService.generar(indicacion)
-        .subscribe(res => {
-          this.loader.hide();
-        })
+      if (this.mode === 'GENERATE') {
+        const indicacion = { ...this.generarIndicacionForm.value, medicamentos: this.medicamentosIndicados.data }
+        console.log("About to generar indicación: ", indicacion);
+        this.IndicacionesService.generar(indicacion)
+          .subscribe(res => {
+            this.loader.hide();
+          })
+      } else {
+        this.IndicacionesService.modificarRechazada(this.codigoIndicacion, this.medicamentos)
+          .subscribe(res => {
+            this.loader.hide();
+          })
+      }
     } else {
       console.error("Error en el formuario: ", this.generarIndicacionForm);
       this.NotificationService.error("Formulario inválido");
@@ -164,6 +174,12 @@ export class IndicacionesGenerarComponent implements OnInit {
 
 }
 
+export interface Indicacion {
+  paciente: Paciente,
+  diagnostico: string,
+  medicamentos: ItemIndicacion[]
+}
+
 
 export interface Paciente {
   dni: string,
@@ -174,7 +190,15 @@ export interface Paciente {
   internado: boolean
 }
 
+export interface ItemIndicacion {
+  medicamentoId: string,
+  cantidad: number
+  frecuencia: number
+  unidad: string
+}
+
 export interface Medicamento {
+  medicamentoId: string,
   nombre: string,
   stockActual: number,
   stockOptimo: number
