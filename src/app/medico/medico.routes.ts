@@ -13,8 +13,9 @@ export const medicoRoutes: Routes = [
     },
     children: [
       { path: '', redirectTo: 'generar-indicacion', pathMatch: 'full' },
-      { path: 'generar-indicacion', component: IndicacionesGenerarComponent, data: {title: 'Generar indicación'} },
+      { path: 'generar-indicacion', component: IndicacionesGenerarComponent, data: {title: 'Generar indicación', 'mode': 'GENERATE'} },
       { path: 'indicaciones-rechazadas', component: IndicacionesRechazadasComponent, data: { title: 'Indicaciones rechazadas' } },
+      { path: 'indicaciones/:codigoIndicacion/modificar', component: IndicacionesGenerarComponent, data: {title: 'Modificar indicación', 'mode': 'MODIFY'} },
     ]
   }
 ]

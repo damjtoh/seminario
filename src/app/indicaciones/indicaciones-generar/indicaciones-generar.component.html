@@ -11,6 +11,9 @@
       <mat-form-field>
         <textarea matInput placeholder="Diagnostico" formControlName="diagnostico" rows="4"></textarea>
       </mat-form-field>
+      <mat-form-field *ngIf="generarIndicacionForm.get('observacion')">
+        <textarea matInput placeholder="Observacion" formControlName="observacion" rows="4"></textarea>
+      </mat-form-field>
     </div>
     <!-- Medicamento -->
     <div class="medicamentos">
@@ -37,7 +40,11 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <button type="submit" mat-raised-button color="primary">Agregar</button>
+          <button type="submit" *ngIf="!isEditing; else editActions" mat-raised-button color="primary">Agregar</button>
+          <ng-template #editActions>
+            <button type="button" (click)="guardarEditarMedicamento()" mat-raised-button color="primary">Guardar cambios</button>
+            <button type="button" (click)="cancelarEditarMedicamento()" mat-raised-button color="primary">Cancelar</button>
+          </ng-template>
         </div>
       </form>
       <div class="medicamentos-table">
@@ -66,9 +73,22 @@
             <th mat-header-cell *matHeaderCellDef> Unidad </th>
             <td mat-cell *matCellDef="let element"> {{element.unidad}} </td>
           </ng-container>
+          
+          <!-- unidad Column -->
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef> </th>
+            <td mat-cell *matCellDef="let element; let rowIndex = index">
+              <button type="button" mat-button color="primary" (click)="eliminarMedicamento(rowIndex)">
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button type="button" mat-button color="primary" (click)="editarMedicamento(rowIndex)">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </td>
+          </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns; let rowIndex = index"></tr>
         </table>
       </div>
     </div>

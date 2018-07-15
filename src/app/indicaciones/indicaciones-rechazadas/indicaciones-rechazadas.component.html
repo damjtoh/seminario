@@ -32,7 +32,7 @@
         <ng-container matColumnDef="acciones">
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let element">
-            <button type="button" mat-button color="primary" (click)="logout()">
+            <button type="button" mat-button color="primary" [routerLink]="['/medico', 'indicaciones', element.codigoIndicacion, 'modificar']">
               <mat-icon>edit</mat-icon>
             </button>
           </td>

@@ -69,6 +69,16 @@ export class IndicacionesService {
         );
   }
 
+  obtenerPorCodigo(codigoIndicacion): Observable<any> {
+    if (environment.production)
+      return this.http.get(`${environment.BASE_URL}/indicaciones/codigoIndicacion`)
+    else
+      return of(indicaciones[0])
+        .pipe(
+          delay(3000)
+        )
+  }
+
   generar(indicacion) {
     if (environment.production)
       return this.http.post(`${environment.BASE_URL}/indicaciones`, { ...indicacion })

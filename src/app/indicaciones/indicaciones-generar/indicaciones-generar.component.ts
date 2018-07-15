@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { AuthService } from './../../core/auth.service';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -36,8 +37,12 @@ export class IndicacionesGenerarComponent implements OnInit {
       stockActual: 10,
       stockOptimo: 5
     }
-  ]
-
+  ];
+  // Edit stuff
+  public isEditing: boolean = false;
+  public currentEditIndex: number;
+  // 
+  public mode: 'MODIFY' | 'GENERATE' = 'MODIFY';
   public unidadesTiempo: any[] = [
     { id: 'hora', text: 'Hora/s' },
     { id: 'minuto', text: 'Minuto/s' },
@@ -54,8 +59,13 @@ export class IndicacionesGenerarComponent implements OnInit {
     private FormBuilder: FormBuilder,
     private AuthService: AuthService,
     private NotificationService: MooNotificationService,
-    private IndicacionesService: IndicacionesService
+    private IndicacionesService: IndicacionesService,
+    private route: ActivatedRoute
   ) {
+
+    console.log("Snapshot: ", this.route.snapshot);
+    this.mode = this.route.snapshot.data['mode'];
+
     this.generarIndicacionForm = FormBuilder.group({
       paciente: new FormControl('', Validators.required),
       diagnostico: new FormControl('', Validators.required),
@@ -71,17 +81,34 @@ export class IndicacionesGenerarComponent implements OnInit {
         startWith(''),
         map(medicamento => medicamento ? this.filterMedicamento(medicamento) : this.medicamentos.slice())
       );
+
   }
 
 
   ngOnInit() {
+    if (this.mode === 'MODIFY') {
+      this.loader.show();
+      this.displayedColumns.push('acciones');
+      this.IndicacionesService.obtenerPorCodigo('pepe')
+        .pipe(map(indicacion => ({ ...indicacion, observacion: 'Alta observación', diagnostico: 'Alto diagnostico' })))
+        .subscribe(indicacion => {
+          console.log("Just got an indicacion: ", indicacion);
+          this.generarIndicacionForm.addControl('observacion', new FormControl(indicacion.observacion));
+          this.generarIndicacionForm.patchValue(indicacion)
+          console.log("Form: ", this.generarIndicacionForm.controls);
+          this.generarIndicacionForm.disable();
+          this.loader.hide();
+        })
+    }
   }
 
   generarIndicacion() {
+    if (this.medicamentosIndicados.data.length === 0) {
+      this.NotificationService.error("Debe indicar por lo menos un medicamento");
+      return;
+    }
     this.loader.show();
-    if (this.generarIndicacionForm.valid) {
-      let medicoId: string;
-      this.AuthService.getUser().subscribe(user => medicoId = user.id);
+    if (this.generarIndicacionForm.valid || this.generarIndicacionForm.disabled) {
       const indicacion = { ...this.generarIndicacionForm.value, medicamentos: this.medicamentosIndicados.data }
       console.log("About to generar indicación: ", indicacion);
       this.IndicacionesService.generar(indicacion)
@@ -89,6 +116,7 @@ export class IndicacionesGenerarComponent implements OnInit {
           this.loader.hide();
         })
     } else {
+      console.error("Error en el formuario: ", this.generarIndicacionForm);
       this.NotificationService.error("Formulario inválido");
       this.loader.hide();
     }
@@ -106,6 +134,36 @@ export class IndicacionesGenerarComponent implements OnInit {
     data.push(this.medicamentosForm.value);
     this.medicamentosIndicados.data = data;
     console.log("Updated list: ", this.medicamentosIndicados);
+  }
+
+  eliminarMedicamento(index: number) {
+    const data = this.medicamentosIndicados.data;
+    data.splice(index, 1);
+    this.medicamentosIndicados.data = data;
+  }
+
+  editarMedicamento(index: number) {
+    console.log("Index: ", index)
+    this.currentEditIndex = index;
+    const medicamentoOrignal = this.medicamentosIndicados.data[index];
+    console.log("Medicamento to edit: ", medicamentoOrignal);
+    this.medicamentosForm.patchValue(medicamentoOrignal);
+    this.isEditing = true;
+  }
+  
+  guardarEditarMedicamento() {
+    if (this.medicamentosForm.valid) {
+      let medicamentosList = this.medicamentosIndicados.data;
+      medicamentosList[this.currentEditIndex] = this.medicamentosForm.value;
+      this.medicamentosIndicados.data = medicamentosList;
+      this.isEditing = false;
+      this.medicamentosForm.reset({});
+
+    } else this.NotificationService.error("Verifique que el formulario esté correctamente completado.");
+  }
+  cancelarEditarMedicamento() {
+    this.medicamentosForm.reset({});
+    this.isEditing = false;
   }
 
   cancelar() {

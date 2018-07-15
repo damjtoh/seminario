@@ -1,0 +1,52 @@
+<moo-loading #loader>
+  <div class="indicacion">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          <h2>Indiación para {{indicacion.paciente.nombre}} {{indicacion.paciente.apellido}}</h2>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="diagnostico">
+          <h3>Diagnostico</h3>
+          <p>{{indicacion.diagnostico}}</p>
+        </div>
+        <div class="medicamentos">
+          <table mat-table [dataSource]="indicacion.medicamentos">
+            <!-- Position Column -->
+            <ng-container matColumnDef="medicamento">
+              <th mat-header-cell *matHeaderCellDef> Nombre medicamento </th>
+              <td mat-cell *matCellDef="let element"> {{element.medicamento}} </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="cantidad">
+              <th mat-header-cell *matHeaderCellDef> Cantidad </th>
+              <td mat-cell *matCellDef="let element"> {{element.cantidad}} </td>
+            </ng-container>
+
+            <!-- Weight Column -->
+            <ng-container matColumnDef="frecuencia">
+              <th mat-header-cell *matHeaderCellDef> Frecuencia </th>
+              <td mat-cell *matCellDef="let element"> {{element.frecuencia}} {{element.unidad}}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+        <div class="observaciones">
+          <mat-form-field>
+            <textarea matInput placeholder="Observaciones" [formControl]="observacionesInput" rows="4"></textarea>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+      <mat-card-actions align="start">
+        <button type="button" mat-raised-button color="primary" (click)="validar()">Validar</button>
+        <button type="button" (click)="rechazar()" mat-raised-button color="warn">Rechazar</button>
+        <button type="button" (click)="goToDashboard()" mat-button color="warn">Cancelar</button>
+
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</moo-loading>
