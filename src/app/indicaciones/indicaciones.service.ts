@@ -3,6 +3,7 @@ import { environment } from 'environments/environment';
 import { of, Observable } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Paciente, Medicamento } from './indicaciones-generar/indicaciones-generar.component';
 
 const indicaciones: any[] =
   [
@@ -51,6 +52,29 @@ const indicaciones: any[] =
       ]
     }
   ]
+const pacientes = [
+  {
+    dni: '37356501',
+    nombre: 'Damián',
+    apellido: 'Crespi',
+    obraSocial: 'Osde 310',
+    numeroAfiliado: '234234',
+    internado: true
+  }
+]
+
+const medicamentos: Medicamento[] = [
+  {
+    nombre: 'Ibuprofeno 800',
+    stockActual: 10,
+    stockOptimo: 5
+  },
+  {
+    nombre: 'Next 800',
+    stockActual: 10,
+    stockOptimo: 5
+  }
+];
 
 @Injectable()
 export class IndicacionesService {
@@ -112,6 +136,28 @@ export class IndicacionesService {
       return this.http.put<any[]>(`${environment.BASE_URL}/indicaciones/enviar`, { codigosIndicaciones })
     else
       return of('Éxito al enviar las indicaciones')
+        .pipe(
+          delay(1000)
+        );
+  }
+
+  //  Pacientes
+
+  obtenerPacientes(): Observable<Paciente[]> {
+    if (environment.production)
+      return this.http.get<any[]>(`${environment.BASE_URL}/pacientes`)
+    else
+      return of(pacientes)
+        .pipe(
+          delay(1000)
+        );
+  }
+
+  obtenerMedicamentos(): Observable<Medicamento[]> {
+    if (environment.production)
+      return this.http.get<any[]>(`${environment.BASE_URL}/medicamentos`)
+    else
+      return of(medicamentos)
         .pipe(
           delay(1000)
         );

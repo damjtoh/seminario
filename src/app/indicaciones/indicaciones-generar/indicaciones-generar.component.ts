@@ -2,7 +2,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AuthService } from './../../core/auth.service';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MooLoadingComponent, MooNotificationService } from 'ngx-moorea-components';
 import { MatTableDataSource } from '@angular/material/table';
@@ -16,28 +16,8 @@ import { IndicacionesService } from '../indicaciones.service';
 export class IndicacionesGenerarComponent implements OnInit {
   @ViewChild("loader") loader: MooLoadingComponent;
   public generarIndicacionForm: FormGroup;
-  public pacientes: Paciente[] = [
-    {
-      dni: '37356501',
-      nombre: 'Damián',
-      apellido: 'Crespi',
-      obraSocial: 'Osde 310',
-      numeroAfiliado: '234234',
-      internado: true
-    }
-  ]
-  public medicamentos: Medicamento[] = [
-    {
-      nombre: 'Ibuprofeno 800',
-      stockActual: 10,
-      stockOptimo: 5
-    },
-    {
-      nombre: 'Next 800',
-      stockActual: 10,
-      stockOptimo: 5
-    }
-  ];
+  public pacientes: Paciente[] = [];
+  public medicamentos: Medicamento[] = [];
   // Edit stuff
   public isEditing: boolean = false;
   public currentEditIndex: number;
@@ -89,6 +69,7 @@ export class IndicacionesGenerarComponent implements OnInit {
     if (this.mode === 'MODIFY') {
       this.loader.show();
       this.displayedColumns.push('acciones');
+      this.IndicacionesService.obtenerMedicamentos().subscribe((medicamentos: Medicamento[]) => this.medicamentos = medicamentos);
       this.IndicacionesService.obtenerPorCodigo('pepe')
         .pipe(map(indicacion => ({ ...indicacion, observacion: 'Alta observación', diagnostico: 'Alto diagnostico' })))
         .subscribe(indicacion => {
@@ -99,6 +80,17 @@ export class IndicacionesGenerarComponent implements OnInit {
           this.generarIndicacionForm.disable();
           this.loader.hide();
         })
+    } else {
+      this.loader.show();
+      forkJoin(
+        this.IndicacionesService.obtenerPacientes(),
+        this.IndicacionesService.obtenerMedicamentos()
+      ).subscribe(res => {
+        const [pacientes, medicamentos] = res;
+        this.pacientes = pacientes;
+        this.medicamentos = medicamentos;
+        this.loader.hide();
+      })
     }
   }
 
@@ -150,7 +142,7 @@ export class IndicacionesGenerarComponent implements OnInit {
     this.medicamentosForm.patchValue(medicamentoOrignal);
     this.isEditing = true;
   }
-  
+
   guardarEditarMedicamento() {
     if (this.medicamentosForm.valid) {
       let medicamentosList = this.medicamentosIndicados.data;
@@ -173,7 +165,7 @@ export class IndicacionesGenerarComponent implements OnInit {
 }
 
 
-interface Paciente {
+export interface Paciente {
   dni: string,
   nombre: string,
   apellido: string,
@@ -182,7 +174,7 @@ interface Paciente {
   internado: boolean
 }
 
-interface Medicamento {
+export interface Medicamento {
   nombre: string,
   stockActual: number,
   stockOptimo: number

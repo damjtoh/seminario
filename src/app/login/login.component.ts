@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
     private router: Router
   ) {
     this.loginForm = formBuilder.group({
-      user: new FormControl('medico', Validators.required),
+      mail: new FormControl('medico', Validators.required),
       password: new FormControl('123', Validators.required),
     });
   }
@@ -29,9 +29,9 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.loader.show();
-    const user = this.loginForm.get('user').value;
+    const mail = this.loginForm.get('mail').value;
     const password = this.loginForm.get('password').value;
-    this.AuthService.login(user, password)
+    this.AuthService.login(mail, password)
       .subscribe((res: any) => {
         console.log("Res: ", res);
         const user: User = res.user;

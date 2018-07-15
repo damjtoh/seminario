@@ -1,0 +1,44 @@
+<moo-loading #loader>
+  <div class="dosis">
+    <mat-card class="dosis">
+      <mat-card-content>
+        <table mat-table [dataSource]="dosis">
+
+          <ng-container matColumnDef="seleccion">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element">
+              <mat-checkbox [(ngModel)]="element.checked"></mat-checkbox>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="paciente">
+            <th mat-header-cell *matHeaderCellDef> Paciente </th>
+            <td mat-cell *matCellDef="let element"> {{element.paciente.nombre}} {{element.paciente.apellido}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="medicamento">
+            <th mat-header-cell *matHeaderCellDef> Medicamento </th>
+            <td mat-cell *matCellDef="let element"> {{element.medicamento}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="cantidad">
+            <th mat-header-cell *matHeaderCellDef> Cantidad </th>
+            <td mat-cell *matCellDef="let element"> {{element.cantidad}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="hora">
+            <th mat-header-cell *matHeaderCellDef> Hora </th>
+            <td mat-cell *matCellDef="let element"> {{element.hora}}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </mat-card-content>
+      <mat-card-actions>
+        <button type="button" mat-raised-button color="primary" (click)="enviar()">Registrar</button>
+        <button type="button" (click)="goToDashboard()" mat-button color="warn">Cancelar</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</moo-loading>

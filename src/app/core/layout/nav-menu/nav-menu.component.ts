@@ -51,6 +51,16 @@ export class NavMenuComponent implements OnInit {
         path: 'medicamentos-otorgados',
         description: 'Medicamentos otorgados'
       },
+    ],
+    enfermero: [
+      {
+        path: 'indicaciones-enviadas',
+        description: 'Aceptar medicacion'
+      },
+      {
+        path: 'dosis',
+        description: 'Registro de dosis otorgada'
+      },
     ]
   }
   constructor() { }

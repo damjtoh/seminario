@@ -14,6 +14,7 @@ import { MedicoModule } from './medico/medico.module';
 import { MatSelectModule } from '@angular/material/select';
 import { MooNotificationModule } from 'ngx-moorea-components';
 import { FarmaceuticoModule } from './farmaceutico/farmaceutico.module';
+import { EnfermeroModule } from './enfermero/enfermero.module';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { FarmaceuticoModule } from './farmaceutico/farmaceutico.module';
     MedicoModule,
     MatSelectModule,
     MooNotificationModule.forRoot(),
-    FarmaceuticoModule
+    FarmaceuticoModule,
+    EnfermeroModule
   ],
   providers: [],
   bootstrap: [AppComponent]

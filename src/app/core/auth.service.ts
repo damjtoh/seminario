@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
 import { of, BehaviorSubject, Observable } from 'rxjs';
@@ -10,7 +11,7 @@ import { User } from './models';
 export class AuthService {
   public userSubject = new BehaviorSubject<User>(this._getUser());
   constructor(
-    // private http: HttpClient,
+    private http: HttpClient,
     private CookieService: CookieService,
     private Router: Router
   ) {
@@ -26,12 +27,12 @@ export class AuthService {
     }
   }
 
-  private httpLogin(user: string, password: string) {
+  private httpLogin(email: string, password: string) {
     if (environment.production) {
-
+      return this.http.post(`${environment.BASE_URL}/usuarios/login`, { email, password })
     } else {
       let role = { id: 'medico', description: 'Médico' };
-      switch (user) {
+      switch (email) {
         case 'farmaceutico':
           role = { id: 'farmaceutico', description: 'Farmaceutico' }
           break;
@@ -45,7 +46,7 @@ export class AuthService {
           id: 'abee818d-9fa9-4a58-826a-1daa15f94863',
           dni: '37356501',
           name: 'Pepe itaka',
-          username: user,
+          email: email,
           role
         }
       };
@@ -53,8 +54,8 @@ export class AuthService {
     }
   }
 
-  login(user: string, password: string) {
-    return this.httpLogin(user, password)
+  login(email: string, password: string) {
+    return this.httpLogin(email, password)
       .pipe(
         map((res: any) => {
           const token = res.token;

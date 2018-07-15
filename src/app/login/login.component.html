@@ -5,7 +5,7 @@
       <moo-loading #loader>
         <form (ngSubmit)="login()" fxLayoutAlign="center stretch" fxLayout="column" [formGroup]="loginForm">
           <mat-form-field>
-            <input matInput placeholder="Usuario" formControlName="user">
+            <input matInput type="email" placeholder="E-mail" formControlName="mail">
           </mat-form-field>
           <mat-form-field>
             <input type="password" matInput placeholder="Contraseña" formControlName="password" />

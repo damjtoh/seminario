@@ -1,3 +1,4 @@
+import { IndicacionesEnviadasComponent } from './indicaciones-enviadas/indicaciones-enviadas.component';
 import { IndicacionesRechazadasComponent } from './indicaciones-rechazadas/indicaciones-rechazadas.component';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
@@ -23,7 +24,8 @@ import { CoreModule } from '../core/core.module';
     IndicacionesPendientesComponent,
     IndicacionesValidadasComponent,
     IndicacionesValidarComponent,
-    IndicacionesRechazadasComponent
+    IndicacionesRechazadasComponent,
+    IndicacionesEnviadasComponent
   ],
   imports: [
     CommonModule,
