@@ -49,16 +49,16 @@ export class IndicacionesValidarComponent implements OnInit {
   }
 
   validar() {
-    this.loader.show();
-    this.IndicacionesService.validar(this.indicacion.codigoIndicacion)
-      .subscribe(
-        (message: string) => {
-          this.NotificationService.success(message);
-          this.goToDashboard()
-        },
-        (err: string) => this.NotificationService.error(err),
-        () => this.loader.hide()
-      );
+    // this.loader.show();
+    // this.IndicacionesService.validar(this.indicacion.codigoIndicacion)
+    //   .subscribe(
+    //     (message: string) => {
+    //       this.NotificationService.success(message);
+    //       this.goToDashboard()
+    //     },
+    //     (err: string) => this.NotificationService.error(err),
+    //     () => this.loader.hide()
+    //   );
   }
 
   rechazar() {
