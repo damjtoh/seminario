@@ -198,7 +198,7 @@ export interface ItemIndicacion {
 }
 
 export interface Medicamento {
-  medicamentoId: string,
+  id: string,
   nombre: string,
   stockActual: number,
   stockOptimo: number

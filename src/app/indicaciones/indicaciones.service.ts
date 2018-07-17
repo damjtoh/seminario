@@ -124,10 +124,10 @@ export class IndicacionesService {
 
   generar(indicacion: Indicacion): Observable<any> {
     if (environment.production) {
-      let postIndicacion = { dni: indicacion.paciente.dni, diag: indicacion.diagnostico };
+      let postIndicacion = { dni: indicacion.paciente, diag: indicacion.diagnostico };
       return this.http.put(`${environment.BASE_URL}/indicaciones`, postIndicacion)
         .pipe(
-          flatMap((res: any) => this.http.post(`${environment.BASE_URL}/indicaciones/${res.codigoIndicacion}/items`, indicacion.medicamentos)),
+          flatMap((codigoIndicacion: any) => this.http.post(`${environment.BASE_URL}/indicaciones/${codigoIndicacion}/items`, indicacion.medicamentos)),
           flatMap((res: any) => {
             return this.AuthService.getUser()
               .toPromise()

@@ -9,7 +9,7 @@ export const medicoRoutes: Routes = [
     component: LayoutComponent,
     canActivate: [RoleGuard],
     data: {
-      expectedRole: 'medico'
+      expectedRole: 'MEDICO'
     },
     children: [
       { path: '', redirectTo: 'generar-indicacion', pathMatch: 'full' },

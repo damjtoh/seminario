@@ -57,14 +57,10 @@ export class AuthService {
   login(email: string, password: string) {
     return this.httpLogin(email, password)
       .pipe(
-        map((res: any) => {
-          const token = res.token;
-          const user = res.user;
-          localStorage.setItem('token', token);
+        map((user: User) => {
           localStorage.setItem('user', JSON.stringify(user));
           this.userSubject.next(user);
-          this.CookieService.put('authToken', token);
-          return res;
+          return user;
         })
       )
   }

@@ -20,12 +20,12 @@
       <form (ngSubmit)="agregarMedicamento(medicamentosForm)" fxLayoutAlign="center stretch" fxLayout="column" [formGroup]="medicamentosForm">
         <div class="medicamentos-fields-container" fxLayout="row" fxLayoutAlign="center" fxLayoutGap="5%">
           <mat-form-field>
-            <input matInput placeholder="Medicamento" aria-label="Medicamento" [matAutocomplete]="auto" formControlName="medicamento">
-            <mat-autocomplete #auto="matAutocomplete">
-              <mat-option *ngFor="let medicamento of filteredMedicamentos | async" [value]="medicamento.medicamentoId">
+            <!-- <input matInput placeholder="Medicamento" aria-label="Medicamento" [matAutocomplete]="auto" formControlName="medicamento"> -->
+            <mat-select>
+              <mat-option *ngFor="let medicamento of medicamentos" [value]="medicamento.id">
                 {{medicamento.nombre}}
               </mat-option>
-            </mat-autocomplete>
+            </mat-select>
           </mat-form-field>
           <mat-form-field>
             <input type="number" matInput placeholder="Cantidad" formControlName="cantidad">

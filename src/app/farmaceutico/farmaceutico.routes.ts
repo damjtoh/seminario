@@ -10,7 +10,7 @@ export const farmaceuticoRoutes: Routes = [
     component: LayoutComponent,
     canActivate: [RoleGuard],
     data: {
-      expectedRole: 'farmaceutico'
+      expectedRole: 'FARMACEUTICO'
     },
     children: [
       { path: '', redirectTo: 'indicaciones-pendientes', pathMatch: 'full' },

@@ -8,7 +8,7 @@ import { Component, OnInit, Input } from '@angular/core';
 export class NavMenuComponent implements OnInit {
   @Input() role: string;
   public menuSections = {
-    medico: [
+    MEDICO: [
       {
         path: 'generar-indicacion',
         description: 'Generar indicación'
@@ -18,7 +18,7 @@ export class NavMenuComponent implements OnInit {
         description: 'Indiaciones rechazadas'
       }
     ],
-    farmaceutico: [
+    FARMACEUTICO: [
       {
         path: 'alta-medicamentos',
         description: 'Alta de medicamentos'
@@ -52,7 +52,7 @@ export class NavMenuComponent implements OnInit {
         description: 'Medicamentos otorgados'
       },
     ],
-    enfermero: [
+    ENFERMERO: [
       {
         path: 'indicaciones-enviadas',
         description: 'Aceptar medicacion'

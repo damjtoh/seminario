@@ -32,10 +32,9 @@ export class LoginComponent implements OnInit {
     const mail = this.loginForm.get('mail').value;
     const password = this.loginForm.get('password').value;
     this.AuthService.login(mail, password)
-      .subscribe((res: any) => {
-        console.log("Res: ", res);
-        const user: User = res.user;
-        this.router.navigate([`/${user.role.id}`]);
+      .subscribe((user: User) => {
+        console.log("User: ", user);
+        this.router.navigate([`/${user.rol.toLowerCase()}`]);
       }, err => {
         console.error("Error al autenticar: ", err);
         this.loader.hide()
