@@ -121,9 +121,10 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.AuthService.getUser()
-      .toPromise()
-      .then((user: User) => {
-        if (user.rol === 'enfermero') {
+      .subscribe((user: User) => {
+        console.log("User: ", user);
+        if (user.rol === 'ENFERMERO') {
+          console.log("I'm an enfermero");
           interval(15000)
             .pipe(
               flatMap(() => this.getDosis()),
