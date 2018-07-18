@@ -4,7 +4,7 @@ export interface User {
   email: string,
   dni: string,
   id: string,
-  rol: 'farmaceutico' | 'medico' | 'enfermero'
+  rol: 'farmaceutico' | 'medico' | 'enfermero' | 'ENFERMERO'
 }
 
 export class FarmaceuticoRole {
