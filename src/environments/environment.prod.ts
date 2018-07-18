@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  BASE_URL: 'http://api.tecnologiascloud.com:8080/sanlucas/dosis'
 };

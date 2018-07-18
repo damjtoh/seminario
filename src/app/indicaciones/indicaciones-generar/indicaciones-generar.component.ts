@@ -1,4 +1,4 @@
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from './../../core/auth.service';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -30,10 +30,7 @@ export class IndicacionesGenerarComponent implements OnInit {
   ];
   public filteredMedicamentos: Observable<Medicamento[]>;
   public medicamentosForm: FormGroup;
-  public medicamentosIndicados = new MatTableDataSource(
-    [
-      { cantidad: 23, frecuencia: 23, medicamento: "Ibuprofeno 800", unidad: "hora" }
-    ]);
+  public medicamentosIndicados = new MatTableDataSource<any>();
   public displayedColumns: string[] = ['medicamento', 'cantidad', 'frecuencia', 'unidad'];
 
   constructor(
@@ -41,7 +38,8 @@ export class IndicacionesGenerarComponent implements OnInit {
     private AuthService: AuthService,
     private NotificationService: MooNotificationService,
     private IndicacionesService: IndicacionesService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {
 
     console.log("Snapshot: ", this.route.snapshot);
@@ -69,15 +67,17 @@ export class IndicacionesGenerarComponent implements OnInit {
   ngOnInit() {
     if (this.mode === 'MODIFY') {
       this.loader.show();
-      this.codigoIndicacion = this.route.params['codigoIndicacion'];
+      this.codigoIndicacion = this.route.snapshot.params['codigoIndicacion'];
       this.displayedColumns.push('acciones');
       this.IndicacionesService.obtenerMedicamentos().subscribe((medicamentos: Medicamento[]) => this.medicamentos = medicamentos);
-      this.IndicacionesService.obtenerPorCodigo('pepe')
-        .pipe(map(indicacion => ({ ...indicacion, observacion: 'Alta observación', diagnostico: 'Alto diagnostico' })))
+      this.IndicacionesService.obtenerPacientes().subscribe((pacientes: Paciente[]) => this.pacientes = pacientes);
+      this.IndicacionesService.obtenerPorCodigo(this.codigoIndicacion)
         .subscribe(indicacion => {
           console.log("Just got an indicacion: ", indicacion);
-          this.generarIndicacionForm.addControl('observacion', new FormControl(indicacion.observacion));
-          this.generarIndicacionForm.patchValue(indicacion)
+          const indicacionToPatch = { ...indicacion, paciente: indicacion.paciente.dni };
+          this.generarIndicacionForm.addControl('observaciones', new FormControl(indicacion.observaciones));
+          this.generarIndicacionForm.patchValue(indicacionToPatch)
+          this.medicamentosIndicados.data = indicacion.items.map(i => ({ ...i, unidad: 'hora' }));
           console.log("Form: ", this.generarIndicacionForm.controls);
           this.generarIndicacionForm.disable();
           this.loader.hide();
@@ -105,15 +105,25 @@ export class IndicacionesGenerarComponent implements OnInit {
 
     if (this.generarIndicacionForm.valid || this.generarIndicacionForm.disabled) {
       if (this.mode === 'GENERATE') {
-        const indicacion = { ...this.generarIndicacionForm.value, medicamentos: this.medicamentosIndicados.data }
+        const medicamentos = this.medicamentosIndicados.data.map(i => {
+          const frecuencia = (i.unidad === 'hora') ? i.frecuencia : i.frecuencia / 60;
+          return { medicamentoId: i.medicamento.id, cantidad: i.cantidad, frecuencia }
+        })
+        const indicacion = { ...this.generarIndicacionForm.value, medicamentos }
         console.log("About to generar indicación: ", indicacion);
         this.IndicacionesService.generar(indicacion)
           .subscribe(res => {
+            this.NotificationService.success("Indicación generada con éxito");
+            this.medicamentosForm.reset();
+            this.generarIndicacionForm.reset();
+            this.medicamentosIndicados.data = [];
             this.loader.hide();
           })
       } else {
         this.IndicacionesService.modificarRechazada(this.codigoIndicacion, this.medicamentos)
           .subscribe(res => {
+            this.NotificationService.success("Éxito al modificar indicación rechazada");
+            this.router.navigate(['/']);
             this.loader.hide();
           })
       }
@@ -150,6 +160,7 @@ export class IndicacionesGenerarComponent implements OnInit {
     const medicamentoOrignal = this.medicamentosIndicados.data[index];
     console.log("Medicamento to edit: ", medicamentoOrignal);
     this.medicamentosForm.patchValue(medicamentoOrignal);
+    console.log("Medicamento form: ", this.medicamentosForm.value);
     this.isEditing = true;
   }
 
@@ -166,6 +177,11 @@ export class IndicacionesGenerarComponent implements OnInit {
   cancelarEditarMedicamento() {
     this.medicamentosForm.reset({});
     this.isEditing = false;
+  }
+
+  byId(f1, f2) {
+    console.log("Comparing: ", f1, f2);
+    return f1 && f2 && f1.id === f2.id;
   }
 
   cancelar() {
@@ -194,7 +210,6 @@ export interface ItemIndicacion {
   medicamentoId: string,
   cantidad: number
   frecuencia: number
-  unidad: string
 }
 
 export interface Medicamento {

@@ -59,7 +59,8 @@ export class IndicacionesRechazadasComponent implements OnInit {
     this.loader.show();
     this.IndicacionesService.obtenerPorEstado(EstadoIndicaciones.RECHAZADA)
       .subscribe(indicaciones => {
-        this.indicaciones = indicacionesRechazadas;
+        console.log("Just recived indicaciones: ", indicaciones);
+        this.indicaciones = indicaciones;
         this.loader.hide();
       });
   }

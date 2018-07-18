@@ -7,6 +7,8 @@ import { delay, map, flatMap } from 'rxjs/operators';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Paciente, Medicamento, Indicacion } from './indicaciones-generar/indicaciones-generar.component';
 import { User } from '../core/models';
+import { fromPromise } from 'rxjs/observable/fromPromise';
+import 'rxjs/add/operator/map'
 
 const indicaciones: any[] =
   [
@@ -70,13 +72,13 @@ const pacientes = [
 
 const medicamentos: Medicamento[] = [
   {
-    medicamentoId: '1',
+    id: '1',
     nombre: 'Ibuprofeno 800',
     stockActual: 10,
     stockOptimo: 5
   },
   {
-    medicamentoId: '2',
+    id: '2',
     nombre: 'Next 800',
     stockActual: 10,
     stockOptimo: 5
@@ -127,15 +129,10 @@ export class IndicacionesService {
       let postIndicacion = { dni: indicacion.paciente, diag: indicacion.diagnostico };
       return this.http.put(`${environment.BASE_URL}/indicaciones`, postIndicacion)
         .pipe(
-          flatMap((codigoIndicacion: any) => this.http.post(`${environment.BASE_URL}/indicaciones/${codigoIndicacion}/items`, indicacion.medicamentos)),
-          flatMap((res: any) => {
-            return this.AuthService.getUser()
-              .toPromise()
-              .then((user: User) => {
-                const email = user.email;
-                return this.http.put(`${environment.BASE_URL}/indicaciones/${res.codigoIndicacion}?email=${email}`, {})
-              })
-          })
+          flatMap((codigoIndicacion: any) => this.http.post(`${environment.BASE_URL}/indicaciones/${codigoIndicacion}/items`, { items: indicacion.medicamentos })
+            .map(() => codigoIndicacion)),
+          flatMap((codigoIndicacion) => this.AuthService.getUser().map((user: User) => ({ user, codigoIndicacion }))),
+          flatMap(({ user, codigoIndicacion }) => this.http.put(`${environment.BASE_URL}/indicaciones/${codigoIndicacion}?email=${user.email}`, {}))
         )
     }
     else
@@ -157,14 +154,13 @@ export class IndicacionesService {
   }
 
 
-  validar(codigoIndicacion) {
+  validar(codigoIndicacion): Observable<any> {
     if (environment.production) {
-      return this.AuthService.getUser()
-        .toPromise()
-        .then((user: User) => {
-          const email = user.email;
-          return this.http.put(`${environment.BASE_URL}/indicaciones/${codigoIndicacion}/validate?email=${email}`, {})
-        })
+      return of({})
+        .pipe(
+          flatMap(() => this.AuthService.getUser()),
+          flatMap((user: User) => this.http.post(`${environment.BASE_URL}/indicaciones/${codigoIndicacion}/validate?email=${user.email}`, {})
+          ));
     } else
       return of('Éxito al validar la indicación')
         .pipe(
@@ -172,9 +168,14 @@ export class IndicacionesService {
         );
   }
   rechazar(codigoIndicacion, observacion) {
-    if (environment.production)
-      return this.http.put(`${environment.BASE_URL}/indicaciones/${codigoIndicacion}`, { observacion, estado: 'RECHAZADO' })
-    else
+    if (environment.production) {
+
+      return of({})
+        .pipe(
+          flatMap(() => this.AuthService.getUser()),
+          flatMap((user: User) => this.http.post(`${environment.BASE_URL}/indicaciones/${codigoIndicacion}/reject?email=${user.email}`, { motivo: observacion }))
+        )
+    } else
       return of('Éxito al rechazar la indicación')
         .pipe(
           delay(1000)
