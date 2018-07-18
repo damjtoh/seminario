@@ -1,3 +1,4 @@
+import { AuthService } from './core/auth.service';
 import { NotificationComponent } from './notification/notification.component';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
@@ -6,6 +7,7 @@ import { MatDialog } from '../../node_modules/@angular/material';
 import { flatMap } from '../../node_modules/rxjs/operators';
 import { environment } from 'environments/environment';
 import { map } from '../../node_modules/rxjs-compat/operator/map';
+import { User } from './core/models';
 
 
 const _dosis = [{
@@ -109,7 +111,8 @@ export class AppComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private AuthService: AuthService
   ) { }
 
   // getDosis() {
@@ -117,38 +120,43 @@ export class AppComponent implements OnInit {
   // }
 
   ngOnInit() {
+    this.AuthService.getUser()
+      .toPromise()
+      .then((user: User) => {
+        if (user.rol === 'enfermero') {
+          interval(15000)
+            .pipe(
+              flatMap(() => this.getDosis()),
+          ).subscribe((dosis: any[]) => {
+            Object.keys(this.notificationsDosis).forEach(k => clearTimeout(this.notificationsDosis[k]['timer']));
+            const dosisEnProx30Min = dosis
+              .map(d => {
+                const fechaPrevista = new Date(d.fechaAplicacionPrevista);
+                console.log("Fecha prevista: ", fechaPrevista);
+                console.log("Fecha actual", new Date())
+                const difference = fechaPrevista.getTime() - new Date().getTime();
+                return { ...d, difference: (difference > 0) ? difference : 0 };
+              })
+              .filter(d => {
+                const millToMinutes = (mill) => Math.round(mill / 60000);
+                console.log("Difference: ", millToMinutes(d.difference));
+                return (millToMinutes(d.difference) <= 30)
+              }).forEach(d => {
+                if (this.notificationsDosis.hasOwnProperty(d.id)) {
+                  if (this.notificationsDosis[d.id].ignore) return;
+                  else {
+                    this.notificationsDosis[d.id]['timer'] = setTimeout(() => this.openNotification(d), (d.difference - 900000));
+                  }
+                } else {
+                  this.notificationsDosis[d.id] = { timer: setTimeout(() => this.openNotification(d), (d.difference - 900000)) }
+                }
+              })
+            console.log("Dosis en los proximos 15 minutos: ", dosisEnProx30Min);
+            console.log("notificationsDosis: ", this.notificationsDosis);
 
-    interval(15000)
-      .pipe(
-        flatMap(() => this.getDosis()),
-    ).subscribe((dosis: any[]) => {
-      Object.keys(this.notificationsDosis).forEach(k => clearTimeout(this.notificationsDosis[k]['timer']));
-      const dosisEnProx30Min = dosis
-        .map(d => {
-          const fechaPrevista = new Date(d.fechaAplicacionPrevista);
-          console.log("Fecha prevista: ", fechaPrevista);
-          console.log("Fecha actual", new Date())
-          const difference = fechaPrevista.getTime() - new Date().getTime();
-          return { ...d, difference: (difference > 0) ? difference : 0 };
-        })
-        .filter(d => {
-          const millToMinutes = (mill) => Math.round(mill / 60000);
-          console.log("Difference: ", millToMinutes(d.difference));
-          return (millToMinutes(d.difference) <= 30)
-        }).forEach(d => {
-          if (this.notificationsDosis.hasOwnProperty(d.id)) {
-            if (this.notificationsDosis[d.id].ignore) return;
-            else {
-              this.notificationsDosis[d.id]['timer'] = setTimeout(() => this.openNotification(d), (d.difference - 900000));
-            }
-          } else {
-            this.notificationsDosis[d.id] = { timer: setTimeout(() => this.openNotification(d), (d.difference - 900000)) }
-          }
-        })
-      console.log("Dosis en los proximos 15 minutos: ", dosisEnProx30Min);
-      console.log("notificationsDosis: ", this.notificationsDosis);
-
-    })
+          })
+        }
+      })
     // this.openNotification(dosisEnProx15Min[0]);
   }
 
