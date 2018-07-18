@@ -37,24 +37,20 @@ export class IndicacionesEnviadasComponent implements OnInit {
       });
   }
 
-  aceptar() {
-    console.log("Indicaciones: ", this.indicaciones);
-    const codigosIndicaciones = this.indicaciones.filter(i => i.checked).map(i => i.codigoIndicacion);
-    console.log("Codigos: ", codigosIndicaciones);
-    if (codigosIndicaciones.length === 0) this.NotificationService.error("Debe seleccionar al menos una indicación");
-    else {
-      this.loader.show();
-      this.IndicacionesService.aceptar(codigosIndicaciones)
-        .subscribe(
-          (message: string) => {
-            this.NotificationService.success(message);
-            this.obtenerIndicaciones()
-          },
-          (err: string) => this.NotificationService.error(err),
-          () => this.loader.hide()
-        );
-    }
+  aceptar(codigoIndicacion) {
+    this.loader.show();
+    this.IndicacionesService.aceptar(codigoIndicacion)
+      .subscribe(
+        (message: string) => {
+          this.NotificationService.success("Indicación aceptada con éxito");
+          this.obtenerIndicaciones()
+        },
+        (err: string) => this.NotificationService.error(err),
+        () => this.loader.hide()
+      );
   }
+
+  rechazar(codigoIndicacion) { }
   goToDashboard() {
     this.Router.navigate(['/']);
   }

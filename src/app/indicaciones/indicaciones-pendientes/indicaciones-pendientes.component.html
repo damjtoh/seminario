@@ -1,5 +1,5 @@
 <moo-loading #loader>
-  <div class="indicaciones-pendientes" fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px">
+  <div class="indicaciones-pendientes" fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px" *ngIf="indicaciones.length; else noIndicaciones">
     <mat-card class="indicacion" *ngFor="let indicacion of indicaciones" fxFlex="50%">
       <mat-card-title class="paciente">
         {{indicacion.paciente.nombre}} {{indicacion.paciente.apellido}}
@@ -33,4 +33,7 @@
       </mat-card-content>
     </mat-card>
   </div>
+  <ng-template #noIndicaciones>
+    <h2>No se encontraron indicaciones</h2>
+  </ng-template>
 </moo-loading>

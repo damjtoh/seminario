@@ -5,7 +5,7 @@
         {{indicacion.paciente.nombre}} {{indicacion.paciente.apellido}}
       </mat-card-title>
       <mat-card-content>
-        <table mat-table [dataSource]="indicacion.medicamentos">
+        <table mat-table [dataSource]="indicacion.items">
           <!-- Position Column -->
           <ng-container matColumnDef="medicamento">
             <th mat-header-cell *matHeaderCellDef> Nombre medicamento </th>
@@ -28,8 +28,8 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
         <div class="acciones">
-          <button type="button" mat-raised-button color="primary" (click)="enviar()">Aceptar</button>
-          <button type="button" mat-raised-button (click)="goToDashboard()" mat-button color="warn">Rechazar</button>
+          <button type="button" mat-raised-button color="primary" (click)="aceptar(indicacion.codigoIndicacion)">Aceptar</button>
+          <button type="button" mat-raised-button (click)="rechazar(indicacion.codigoIndicacion)" mat-button color="warn">Rechazar</button>
         </div>
       </mat-card-content>
     </mat-card>

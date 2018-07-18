@@ -48,7 +48,7 @@ export class IndicacionesValidadasComponent implements OnInit {
         .subscribe(
           (message: string) => {
             console.log("message: ", message);
-            this.NotificationService.success(message);
+            this.NotificationService.success("Indicación enviada con éxito");
             this.obtenerIndicaciones()
           },
           (err: string) => this.NotificationService.error(err),

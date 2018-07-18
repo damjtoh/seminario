@@ -195,17 +195,13 @@ export class IndicacionesService {
           delay(1000)
         );
   }
-  aceptar(codigosIndicaciones: string[]): Observable<any> {
+  aceptar(codigoIndicacion: string): Observable<any> {
     if (environment.production) {
-      this.AuthService.getUser()
-        .toPromise()
-        .then((user: User) => {
-          const email = user.email;
-          return from(codigosIndicaciones)
-            .pipe(
-              map(codigo => this.http.post<any>(`${environment.BASE_URL}/indicaciones/${codigo}/accept?email=${email}`, {}))
-            )
-        });
+      return of({})
+        .pipe(
+          flatMap(() => this.AuthService.getUser()),
+          flatMap((user: User) => this.http.post<any>(`${environment.BASE_URL}/indicaciones/${codigoIndicacion}/accept?email=${user.email}`, {}))
+        )
     }
     else
       return of('Éxito al enviar las indicaciones')
