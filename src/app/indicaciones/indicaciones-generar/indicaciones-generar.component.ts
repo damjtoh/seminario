@@ -31,7 +31,7 @@ export class IndicacionesGenerarComponent implements OnInit {
   public filteredMedicamentos: Observable<Medicamento[]>;
   public medicamentosForm: FormGroup;
   public medicamentosIndicados = new MatTableDataSource<any>();
-  public displayedColumns: string[] = ['medicamento', 'cantidad', 'frecuencia', 'unidad'];
+  public displayedColumns: string[] = ['medicamento', 'cantidad', 'frecuencia', 'unidad', 'acciones'];
 
   constructor(
     private FormBuilder: FormBuilder,
@@ -68,7 +68,7 @@ export class IndicacionesGenerarComponent implements OnInit {
     if (this.mode === 'MODIFY') {
       this.loader.show();
       this.codigoIndicacion = this.route.snapshot.params['codigoIndicacion'];
-      this.displayedColumns.push('acciones');
+      // this.displayedColumns.push('acciones');
       this.IndicacionesService.obtenerMedicamentos().subscribe((medicamentos: Medicamento[]) => this.medicamentos = medicamentos);
       this.IndicacionesService.obtenerPacientes().subscribe((pacientes: Paciente[]) => this.pacientes = pacientes);
       this.IndicacionesService.obtenerPorCodigo(this.codigoIndicacion)
