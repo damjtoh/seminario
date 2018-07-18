@@ -6,16 +6,28 @@ mat-sidenav-container {
   padding: 0 30px;
 }
 
+.profile {
+  text-align: center;
+}
+
+.profile p {
+  margin-bottom:0;
+}
+
 .profile-picture {
   display: inline-block;
-  font-size: 1em;
-  width: 2.5em;
-  height: 2.5em;
-  line-height: 2.5em;
+  font-size: 1.75em;
+  width: 3em;
+  height: 3em;
+  line-height: 3em;
   text-align: center;
   border-radius: 50%;
   background: plum;
   vertical-align: middle;
-  margin-right: 1em;
   color: white;
+}
+
+.logo {
+  width: 280px;
+  padding: 20px;
 }

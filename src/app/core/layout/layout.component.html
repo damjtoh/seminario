@@ -1,9 +1,11 @@
 <mat-sidenav-container fullscreen fxLayout="row">
   <mat-sidenav opened="true" mode="side" fxFlex="40 40">
-    <h1>Sanatorio San Lucas</h1>
+    <div class="logo">
+      <a [routerLink]="['/']"><img src="../../../assets/logo.jpg" alt="Sanatorio San Lucas" width="100%"></a>
+    </div>
     <mat-divider ></mat-divider>
     <div class="profile">
-      <p class="profile-picture">PI</p>
+      <p class="profile-picture">{{(user |async).nombre.charAt(0)}}{{(user |async).apellido.charAt(0)}}</p>
       <h3>{{(user |async).nombre}} {{(user |async).apellido}}</h3>
       <h4>{{(user |async).rol}}</h4>
     </div>
