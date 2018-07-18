@@ -66,7 +66,6 @@ export class IndicacionesEnviadasComponent implements OnInit {
           this.NotificationService.error(err.error || "Ocurrió un error al rechazar la indicación");
           this.loader.hide()
         });
-      );
   }
   goToDashboard() {
     this.Router.navigate(['/']);
