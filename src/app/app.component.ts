@@ -157,6 +157,8 @@ export class AppComponent implements OnInit {
   }
 
   openNotification(indicacion: any) {
+    if (indicacion.opened) return;
+    indicacion.opened = true;
     const dialogRef = this.dialog.open(NotificationComponent, {
       width: '60vw',
       data: indicacion
