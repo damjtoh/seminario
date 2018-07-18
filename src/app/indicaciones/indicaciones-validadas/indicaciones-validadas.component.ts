@@ -47,6 +47,7 @@ export class IndicacionesValidadasComponent implements OnInit {
       this.IndicacionesService.enviar(codigosIndicaciones)
         .subscribe(
           (message: string) => {
+            console.log("message: ", message);
             this.NotificationService.success(message);
             this.obtenerIndicaciones()
           },

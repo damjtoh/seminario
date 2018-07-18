@@ -63,7 +63,7 @@ export class IndicacionesValidarComponent implements OnInit {
     this.IndicacionesService.validar(this.codigoIndicacion)
       .subscribe((message: string) => {
         console.log("Message: ", message);
-        this.NotificationService.success(message);
+        this.NotificationService.success("Éxito al validar indicación");
         this.goToDashboard()
         this.loader.hide()
       },

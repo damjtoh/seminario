@@ -1,6 +1,6 @@
 {
   "/api": {
-    "target": "http://52.91.60.4:8080/sanlucas/",
+    "target": "http://52.91.60.4:8080/",
     "secure": false,
     "pathRewrite": {
       "^/api": ""

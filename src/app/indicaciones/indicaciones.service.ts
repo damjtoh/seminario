@@ -186,7 +186,7 @@ export class IndicacionesService {
     if (environment.production) {
       return from(codigosIndicaciones)
         .pipe(
-          map(codigo => this.http.post<any[]>(`${environment.BASE_URL}/indicaciones/${codigo}/send`, {}))
+          flatMap(codigo => this.http.post<any[]>(`${environment.BASE_URL}/indicaciones/${codigo}/send`, {}))
         )
     }
     else
