@@ -33,7 +33,7 @@
         </mat-card-content>
       </mat-card>
     </div>
-    <div class="acciones">
+    <div class="acciones" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" *ngIf="indicaciones.length">
       <button type="button" mat-raised-button color="primary" (click)="enviar()">Enviar</button>
       <button type="button" (click)="goToDashboard()" mat-button color="warn">Cancelar</button>
     </div>

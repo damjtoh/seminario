@@ -27,7 +27,7 @@
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
-        <div class="acciones">
+        <div class="acciones" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px">
           <button type="button" mat-raised-button color="primary" (click)="aceptar(indicacion.codigoIndicacion)">Aceptar</button>
           <button type="button" mat-raised-button (click)="rechazar(indicacion.codigoIndicacion)" mat-button color="warn">Rechazar</button>
         </div>

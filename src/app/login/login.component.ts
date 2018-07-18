@@ -20,8 +20,8 @@ export class LoginComponent implements OnInit {
     private router: Router
   ) {
     this.loginForm = formBuilder.group({
-      mail: new FormControl('mundobaton@gmail.com', Validators.required),
-      password: new FormControl('12345', Validators.required),
+      mail: new FormControl('', Validators.required),
+      password: new FormControl('', Validators.required),
     });
   }
 

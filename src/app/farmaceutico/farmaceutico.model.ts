@@ -1,5 +1,6 @@
 export enum EstadoIndicaciones {
   VALIDADO = 'validado',
   RECHAZADA = 'rechazado',
-  PENDIENTE = 'pendiente'
+  PENDIENTE = 'pendiente',
+  ENVIADO = 'enviado'
 }

@@ -37,11 +37,11 @@
         </div>
         <div class="observaciones">
           <mat-form-field>
-            <textarea matInput placeholder="Observaciones" [formControl]="observacionesInput" rows="4"></textarea>
+            <textarea matInput placeholder="Observaciones" style="width: 100%;" [formControl]="observacionesInput" rows="4"></textarea>
           </mat-form-field>
         </div>
       </mat-card-content>
-      <mat-card-actions align="start">
+      <mat-card-actions align="center">
         <button type="button" mat-raised-button color="primary" (click)="validar()">Validar</button>
         <button type="button" (click)="rechazar()" mat-raised-button color="warn">Rechazar</button>
         <button type="button" (click)="goToDashboard()" mat-button color="warn">Cancelar</button>

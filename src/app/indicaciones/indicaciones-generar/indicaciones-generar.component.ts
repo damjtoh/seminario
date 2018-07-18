@@ -158,6 +158,7 @@ export class IndicacionesGenerarComponent implements OnInit {
     data.push(this.medicamentosForm.value);
     this.medicamentosIndicados.data = data;
     console.log("Updated list: ", this.medicamentosIndicados);
+    this.medicamentosForm.reset();
   }
 
   eliminarMedicamento(index: number) {

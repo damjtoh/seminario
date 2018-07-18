@@ -3,7 +3,7 @@
     <mat-card class="indicacion" *ngFor="let indicacion of indicaciones" fxFlex="50%">
       <mat-card-title class="paciente">
         {{indicacion.paciente.nombre}} {{indicacion.paciente.apellido}}
-        <button type="button" mat-button color="primary" fxFlex="20%" fxFlexOffset="60%" [routerLink]="['/farmaceutico', 'indicaciones', indicacion.codigoIndicacion, 'validar']">
+        <button type="button" mat-button color="primary" fxFlex="20%" [routerLink]="['/farmaceutico', 'indicaciones', indicacion.codigoIndicacion, 'validar']">
           <mat-icon>visibility</mat-icon>VER
         </button>
       </mat-card-title>
