@@ -24,7 +24,7 @@ import { EnfermeroModule } from './enfermero/enfermero.module';
     BrowserModule,
     CoreModule,
     BrowserAnimationsModule,
-    RouterModule.forRoot(routes),
+    RouterModule.forRoot(routes, {useHash: true}),
     LoginModule,
     MatIconModule,
     MedicoModule,
