@@ -2,7 +2,7 @@ import { AuthService } from './core/auth.service';
 import { NotificationComponent } from './notification/notification.component';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { interval, of, Observable } from 'rxjs';
+import { interval, of, Observable, Subscription } from 'rxjs';
 import { MatDialog } from '../../node_modules/@angular/material';
 import { flatMap } from '../../node_modules/rxjs/operators';
 import { environment } from 'environments/environment';
@@ -108,6 +108,7 @@ const _dosis = [{
 export class AppComponent implements OnInit {
   title = 'app';
   public notificationsDosis: any = {};
+  public sub: Subscription;
 
   constructor(
     private http: HttpClient,
@@ -123,9 +124,9 @@ export class AppComponent implements OnInit {
     this.AuthService.getUser()
       .subscribe((user: User) => {
         console.log("User: ", user);
-        if (user.rol === 'ENFERMERO') {
+        if (user && user.rol === 'ENFERMERO') {
           console.log("I'm an enfermero");
-          interval(15000)
+          this.sub = interval(15000)
             .pipe(
               flatMap(() => this.getDosis()),
           ).subscribe((dosis: any[]) => {
@@ -156,6 +157,8 @@ export class AppComponent implements OnInit {
             console.log("notificationsDosis: ", this.notificationsDosis);
 
           })
+        } else {
+          if (this.sub) this.sub.unsubscribe();
         }
       })
     // this.openNotification(dosisEnProx15Min[0]);
