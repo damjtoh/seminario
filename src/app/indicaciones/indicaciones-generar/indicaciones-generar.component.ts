@@ -119,17 +119,24 @@ export class IndicacionesGenerarComponent implements OnInit {
         console.log("About to generar indicación: ", indicacion);
         this.IndicacionesService.generar(indicacion)
           .subscribe(res => {
+            console.log("Res generar: ", res);
+            if (res === 'noPlease') return;
             this.NotificationService.success("Indicación generada con éxito");
             this.medicamentosForm.reset();
             this.generarIndicacionForm.reset();
             this.medicamentosIndicados.data = [];
             this.loader.hide();
-          }, () => {
+          }, (err) => {
+            console.error(err);
             this.NotificationService.error("Ocurrió un error al generar la indicación");
             this.loader.hide();
           })
       } else {
-        this.IndicacionesService.modificarRechazada(this.codigoIndicacion, this.medicamentos)
+        const medicamentos = this.medicamentosIndicados.data.map(i => {
+          const frecuencia = (i.unidad === 'hora') ? i.frecuencia : i.frecuencia / 60;
+          return { medicamentoId: i.medicamento.id, cantidad: i.cantidad, frecuencia }
+        })
+        this.IndicacionesService.modificarRechazada(this.codigoIndicacion, medicamentos)
           .subscribe(res => {
             this.NotificationService.success("Éxito al modificar indicación rechazada");
             this.router.navigate(['/']);

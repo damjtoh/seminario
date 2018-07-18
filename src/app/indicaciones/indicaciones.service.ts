@@ -1,9 +1,9 @@
 import { AuthService } from './../core/auth.service';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
-import { of, Observable, from } from 'rxjs';
+import { of, Observable, from, Subject } from 'rxjs';
 import { _throw } from 'rxjs/observable/throw'
-import { delay, map, flatMap } from 'rxjs/operators';
+import { delay, map, flatMap, takeUntil } from 'rxjs/operators';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Paciente, Medicamento, Indicacion } from './indicaciones-generar/indicaciones-generar.component';
 import { User } from '../core/models';
@@ -125,14 +125,19 @@ export class IndicacionesService {
 
 
   generar(indicacion: Indicacion): Observable<any> {
+    const unsubscribe$ = new Subject();
     if (environment.production) {
       let postIndicacion = { dni: indicacion.paciente, diag: indicacion.diagnostico };
       return this.http.put(`${environment.BASE_URL}/indicaciones`, postIndicacion)
         .pipe(
+          takeUntil(unsubscribe$),
           flatMap((codigoIndicacion: any) => this.http.post(`${environment.BASE_URL}/indicaciones/${codigoIndicacion}/items`, { items: indicacion.medicamentos })
             .map(() => codigoIndicacion)),
           flatMap((codigoIndicacion) => this.AuthService.getUser().map((user: User) => ({ user, codigoIndicacion }))),
-          flatMap(({ user, codigoIndicacion }) => this.http.put(`${environment.BASE_URL}/indicaciones/${codigoIndicacion}?email=${user.email}`, {}))
+          flatMap(({ user, codigoIndicacion }) => {
+            if (!user) return of('noPlease');
+            return this.http.put(`${environment.BASE_URL}/indicaciones/${codigoIndicacion}?email=${user.email}`, {})
+          })
         )
     }
     else
@@ -145,6 +150,14 @@ export class IndicacionesService {
   modificarRechazada(codigoIndicacion: string, medicamentos: any[]) {
     if (environment.production) {
       return this.http.post(`${environment.BASE_URL}/indicaciones/${codigoIndicacion}`, { medicamentos })
+        .pipe(
+          flatMap((codigoIndicacionNew: any) => this.http.post(`${environment.BASE_URL}/indicaciones/${codigoIndicacionNew}/items`, { items: medicamentos })
+            .map(() => codigoIndicacionNew)),
+          flatMap((codigoIndicacionNew) => this.AuthService.getUser().map((user: User) => ({ user, codigoIndicacionNew }))),
+          flatMap(({ user, codigoIndicacionNew }) => {
+            return this.http.put(`${environment.BASE_URL}/indicaciones/${codigoIndicacionNew}?email=${user.email}`, {})
+          })
+        )
     } else {
       return of('Éxito al generar la indicación')
         .pipe(

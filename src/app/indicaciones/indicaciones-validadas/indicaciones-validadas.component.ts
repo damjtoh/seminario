@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { IndicacionesService } from '../../indicaciones/indicaciones.service';
 import { EstadoIndicaciones } from '../../farmaceutico/farmaceutico.model';
+import { HttpErrorResponse } from '../../../../node_modules/@angular/common/http';
 
 @Component({
   selector: 'app-indicaciones-validadas',
@@ -54,7 +55,7 @@ export class IndicacionesValidadasComponent implements OnInit {
             this.NotificationService.success("Indicación enviada con éxito");
             this.obtenerIndicaciones()
           },
-          (err: string) => this.NotificationService.error(err),
+          (err: HttpErrorResponse) => this.NotificationService.error(err.error || "Ocurrió un error al enviar"),
           () => this.loader.hide()
         );
     }
