@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { IndicacionesService } from '../../indicaciones/indicaciones.service';
 import { EstadoIndicaciones } from '../../farmaceutico/farmaceutico.model';
+import { HttpErrorResponse } from '../../../../node_modules/@angular/common/http';
 
 @Component({
   selector: 'app-indicaciones-enviadas',
@@ -53,7 +54,20 @@ export class IndicacionesEnviadasComponent implements OnInit {
       );
   }
 
-  rechazar(codigoIndicacion) { }
+  rechazar(codigoIndicacion) {
+    this.loader.show();
+    this.IndicacionesService.rechazar(codigoIndicacion, null)
+      .subscribe(
+        (message: string) => {
+          this.NotificationService.success("Indicación rechazada con éxito");
+          this.obtenerIndicaciones()
+        },
+        (err: HttpErrorResponse) => {
+          this.NotificationService.error(err.error || "Ocurrió un error al rechazar la indicación");
+          this.loader.hide()
+        });
+      );
+  }
   goToDashboard() {
     this.Router.navigate(['/']);
   }

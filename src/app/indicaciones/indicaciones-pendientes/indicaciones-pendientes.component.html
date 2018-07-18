@@ -1,6 +1,6 @@
 <moo-loading #loader>
-  <div class="indicaciones-pendientes" fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px" *ngIf="indicaciones.length; else noIndicaciones">
-    <mat-card class="indicacion" *ngFor="let indicacion of indicaciones" fxFlex="50%">
+  <div class="indicaciones-pendientes" fxLayout="row wrap" fxLayout.xs="column wrap" fxLayoutGap="5%" fxLayoutAlign="center stretch" *ngIf="indicaciones.length; else noIndicaciones">
+    <mat-card class="indicacion" *ngFor="let indicacion of indicaciones" fxFlex="45%">
       <mat-card-title class="paciente">
         {{indicacion.paciente.nombre}} {{indicacion.paciente.apellido}}
         <button type="button" mat-button color="primary" fxFlex="20%" [routerLink]="['/farmaceutico', 'indicaciones', indicacion.codigoIndicacion, 'validar']">

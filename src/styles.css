@@ -10,3 +10,8 @@ body {
 html {
   font-family: Roboto,"Helvetica Neue",sans-serif;
 }
+
+
+.mat-card {
+  margin-bottom: 20px;
+}

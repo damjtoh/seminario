@@ -53,7 +53,7 @@ export class DosisComponent implements OnInit {
       .pipe(
         flatMap(codigo => this.AuthService.getUser()
           .map((user: User) => ({ user, codigo }))),
-        flatMap(({ user, codigo }) => this.http.post<any>(`${environment.BASE_URL}/dosis/${codigo}/?email=${user.email}`, {}))
+        flatMap(({ user, codigo }) => this.http.post<any>(`${environment.BASE_URL}/dosis/${codigo}?email=${user.email}`, {}))
       ).subscribe(res => {
         this.NotificationService.success("Éxito al registrar las dosis");
         this.loader.hide();

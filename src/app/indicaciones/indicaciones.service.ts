@@ -169,11 +169,12 @@ export class IndicacionesService {
   }
   rechazar(codigoIndicacion, observacion) {
     if (environment.production) {
-
+      let postData = {};
+      if (observacion) postData['motivo'] = observacion
       return of({})
         .pipe(
           flatMap(() => this.AuthService.getUser()),
-          flatMap((user: User) => this.http.post(`${environment.BASE_URL}/indicaciones/${codigoIndicacion}/reject?email=${user.email}`, { motivo: observacion }))
+          flatMap((user: User) => this.http.post(`${environment.BASE_URL}/indicaciones/${codigoIndicacion}/reject?email=${user.email}`, postData))
         )
     } else
       return of('Éxito al rechazar la indicación')
