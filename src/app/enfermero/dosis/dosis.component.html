@@ -1,9 +1,8 @@
 <moo-loading #loader>
-  <div class="dosis">
+  <div class="dosis" *ngIf="dosis.length; else noDosis">
     <mat-card class="dosis">
       <mat-card-content>
         <table mat-table [dataSource]="dosis">
-
           <ng-container matColumnDef="seleccion">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let element">
@@ -41,4 +40,7 @@
       </mat-card-actions>
     </mat-card>
   </div>
+  <ng-template #noDosis>
+    <h2>No se encontraron dosis</h2>
+  </ng-template>
 </moo-loading>

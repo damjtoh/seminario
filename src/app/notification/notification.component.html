@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>Recordatorio de aplicacion de dosis</h2>
+<mat-dialog-content>
+  <p *ngIf="dosis">
+    Recuerda que dentro de los proximos 15 minutos debes aplicar
+    <strong>{{dosis.itemIndicacion.cantidad}}</strong> dosis de
+    <strong>{{dosis.itemIndicacion.medicamento.nombre}}</strong> al paciente
+    <strong>{{dosis.paciente.nombre}} {{dosis.paciente.apellido}}</strong>
+  </p>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+  <button mat-raised-button color="primary" [routerLink]="['enfermero', 'dosis']" [queryParams]="{highlight: dosis.id}"
+    mat-dialog-close>Registrar aplicación</button>
+  <button mat-button color="warn" mat-dialog-close>Ignorar</button>
+</mat-dialog-actions>

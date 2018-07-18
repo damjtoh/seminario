@@ -45,9 +45,13 @@ export class DosisComponent implements OnInit {
   }
 
   aplicar() {
-    this.loader.show();
     console.log("Dosis: ", this.dosis)
     const codigosDosis = this.dosis.filter(i => i.checked).map(i => i.id);
+    if (codigosDosis.length === 0) {
+      this.NotificationService.error("Debe seleccionar por lo menos una dosis a apllicar");
+      return;
+    }
+    this.loader.show();
     console.log("Codigos Dosis: ", codigosDosis)
     from(codigosDosis)
       .pipe(
