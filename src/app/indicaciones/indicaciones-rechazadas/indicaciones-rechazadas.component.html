@@ -1,5 +1,5 @@
 <moo-loading #loader>
-  <div class="indicaciones-pendientes">
+  <div class="indicaciones-pendientes" *ngIf="indicaciones.length; else noIndicaciones">
     <mat-card class="indicacion">
       <table mat-table [dataSource]="indicaciones">
         <ng-container matColumnDef="paciente">
@@ -42,4 +42,7 @@
       </table>
     </mat-card>
   </div>
+  <ng-template #noIndicaciones>
+      <h2>No se encontraron indicaciones rechazadas</h2>
+    </ng-template>
 </moo-loading>
