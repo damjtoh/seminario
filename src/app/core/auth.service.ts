@@ -57,7 +57,6 @@ export class AuthService {
   login(email: string, password: string) {
     return this.httpLogin(email, password)
       .pipe(
-        map((user:User) => ({...user, rol: 'FARMACEUTICO'})),
         map((user: User) => {
           localStorage.setItem('user', JSON.stringify(user));
           this.userSubject.next(user);
