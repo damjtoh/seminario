@@ -38,6 +38,9 @@ export class DosisComponent implements OnInit {
         console.log("Dosis:", dosis);
         this.dosis = dosis;
         this.loader.hide();
+      }, () => {
+        this.NotificationService.error("Ocurrió un error al obtener las dosis");
+        this.loader.hide();
       })
   }
 
@@ -55,6 +58,9 @@ export class DosisComponent implements OnInit {
         this.NotificationService.success("Éxito al registrar las dosis");
         this.loader.hide();
         this.getDosis();
+      }, () => {
+        this.NotificationService.error("Ocurrió un error al aplicar la dosis");
+        this.loader.hide();
       })
   }
 

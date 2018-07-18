@@ -81,6 +81,9 @@ export class IndicacionesGenerarComponent implements OnInit {
           console.log("Form: ", this.generarIndicacionForm.controls);
           this.generarIndicacionForm.disable();
           this.loader.hide();
+        }, () => {
+          this.NotificationService.error("Ocurrió un error al obtener la indicación");
+          this.loader.hide();
         })
     } else {
       this.loader.show();
@@ -91,6 +94,9 @@ export class IndicacionesGenerarComponent implements OnInit {
         const [pacientes, medicamentos] = res;
         this.pacientes = pacientes;
         this.medicamentos = medicamentos;
+        this.loader.hide();
+      }, () => {
+        this.NotificationService.error("Ocurrió un error al obtener los medicamentos");
         this.loader.hide();
       })
     }
@@ -118,12 +124,18 @@ export class IndicacionesGenerarComponent implements OnInit {
             this.generarIndicacionForm.reset();
             this.medicamentosIndicados.data = [];
             this.loader.hide();
+          }, () => {
+            this.NotificationService.error("Ocurrió un error al generar la indicación");
+            this.loader.hide();
           })
       } else {
         this.IndicacionesService.modificarRechazada(this.codigoIndicacion, this.medicamentos)
           .subscribe(res => {
             this.NotificationService.success("Éxito al modificar indicación rechazada");
             this.router.navigate(['/']);
+            this.loader.hide();
+          }, () => {
+            this.NotificationService.error("Ocurrió un error al modificar la indicación");
             this.loader.hide();
           })
       }

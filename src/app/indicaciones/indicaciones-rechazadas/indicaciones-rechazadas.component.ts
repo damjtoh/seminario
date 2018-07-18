@@ -1,6 +1,6 @@
 import { IndicacionesService } from './../../indicaciones/indicaciones.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MooLoadingComponent } from '../../../../node_modules/ngx-moorea-components';
+import { MooLoadingComponent, MooNotificationService } from 'ngx-moorea-components';
 import { EstadoIndicaciones } from '../../farmaceutico/farmaceutico.model';
 
 const indicacionesRechazadas: any[] = [
@@ -52,7 +52,8 @@ export class IndicacionesRechazadasComponent implements OnInit {
   public indicaciones: any[] = [];
   public displayedColumns: string[] = ['paciente', 'medico', 'fechaCreacion', 'farmaceutico', 'fechaValidacion', 'acciones'];
   constructor(
-    private IndicacionesService: IndicacionesService
+    private IndicacionesService: IndicacionesService,
+    private NotificationService: MooNotificationService
   ) { }
 
   ngOnInit() {
@@ -61,6 +62,9 @@ export class IndicacionesRechazadasComponent implements OnInit {
       .subscribe(indicaciones => {
         console.log("Just recived indicaciones: ", indicaciones);
         this.indicaciones = indicaciones;
+        this.loader.hide();
+      }, () => {
+        this.NotificationService.error("Ocurrió un error al obtener las indicaciones");
         this.loader.hide();
       });
   }

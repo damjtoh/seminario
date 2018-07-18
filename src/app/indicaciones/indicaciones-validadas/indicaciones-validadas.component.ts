@@ -34,6 +34,9 @@ export class IndicacionesValidadasComponent implements OnInit {
         console.log("Indicaciones: ", indicaciones);
         this.indicaciones = indicaciones;
         this.loader.hide();
+      }, () => {
+        this.NotificationService.error("Ocurrió un error al obtener las indicaciones");
+        this.loader.hide();
       });
   }
 

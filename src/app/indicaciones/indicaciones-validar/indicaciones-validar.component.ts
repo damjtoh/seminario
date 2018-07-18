@@ -55,6 +55,9 @@ export class IndicacionesValidarComponent implements OnInit {
       .subscribe(indicacion => {
         this.indicacion = indicacion;
         this.loader.hide();
+      }, () => {
+        this.NotificationService.error("Ocurrió un error al obtener la indicación");
+        this.loader.hide();
       });
   }
 
