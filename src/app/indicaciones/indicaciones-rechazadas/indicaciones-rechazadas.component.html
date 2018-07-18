@@ -21,7 +21,7 @@
         <!-- Name Column -->
         <ng-container matColumnDef="farmaceutico">
           <th mat-header-cell *matHeaderCellDef> Farmaceutico </th>
-          <td mat-cell *matCellDef="let element"> {{element.farmaceutico.nombre}} {{element.farmaceutico.apellido}} </td>
+          <td mat-cell *matCellDef="let element"> {{element.farmaceutico?.nombre}} {{element.farmaceutico?.apellido}} </td>
         </ng-container>
         <ng-container matColumnDef="fechaValidacion">
           <th mat-header-cell *matHeaderCellDef> Fecha validación </th>

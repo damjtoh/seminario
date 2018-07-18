@@ -10,7 +10,7 @@ export const enfermeroRoutes: Routes = [
     component: LayoutComponent,
     canActivate: [RoleGuard],
     data: {
-      expectedRole: 'enfermero'
+      expectedRole: 'ENFERMERO'
     },
     children: [
       { path: '', redirectTo: 'indicaciones-enviadas', pathMatch: 'full' },

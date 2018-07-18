@@ -16,19 +16,7 @@ import { AuthService } from '../../core/auth.service';
 })
 export class DosisComponent implements OnInit {
   @ViewChild("loader") loader: MooLoadingComponent;
-  public dosis: any[] = [
-    {
-      codigoDosis: '1',
-      paciente: {
-        dni: '37356501',
-        nombre: 'Damián',
-        apellido: 'Crespi'
-      },
-      medicamento: 'Ibuprofeno 800',
-      cantidad: 1,
-      hora: '12:00'
-    }
-  ];
+  public dosis: any[] = [];
   public displayedColumns: string[] = ['seleccion', 'paciente', 'medicamento', 'cantidad', 'hora'];
 
   constructor(
@@ -40,10 +28,17 @@ export class DosisComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.getDosis();
   }
 
   getDosis() {
-    return this.http.get(`${environment.BASE_URL}`)
+    this.loader.show();
+    return this.http.get(`${environment.BASE_URL}/dosis`)
+      .subscribe((dosis: any[]) => {
+        console.log("Dosis:", dosis);
+        this.dosis = dosis;
+        this.loader.hide();
+      })
   }
 
   aplicar() {
@@ -62,6 +57,10 @@ export class DosisComponent implements OnInit {
             this.getDosis();
           })
       });
+  }
+
+  goToDashboard() {
+    this.Router.navigate(['/']);
   }
 
 }

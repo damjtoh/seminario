@@ -1,6 +1,6 @@
 import { AuthService } from './../core/auth.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MooLoadingComponent } from 'ngx-moorea-components';
+import { MooLoadingComponent, MooNotificationService } from 'ngx-moorea-components';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { User } from '../core/models';
@@ -16,11 +16,12 @@ export class LoginComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private AuthService: AuthService,
+    private NotificationService: MooNotificationService,
     private router: Router
   ) {
     this.loginForm = formBuilder.group({
-      mail: new FormControl('medico', Validators.required),
-      password: new FormControl('123', Validators.required),
+      mail: new FormControl('mundobaton@gmail.com', Validators.required),
+      password: new FormControl('12345', Validators.required),
     });
   }
 
@@ -32,11 +33,11 @@ export class LoginComponent implements OnInit {
     const mail = this.loginForm.get('mail').value;
     const password = this.loginForm.get('password').value;
     this.AuthService.login(mail, password)
-      .subscribe((res: any) => {
-        console.log("Res: ", res);
-        const user: User = res.user;
-        this.router.navigate([`/${user.role.id}`]);
+      .subscribe((user: User) => {
+        console.log("User: ", user);
+        this.router.navigate([`/${user.rol.toLowerCase()}`]);
       }, err => {
+        this.NotificationService.error(err.error);
         console.error("Error al autenticar: ", err);
         this.loader.hide()
       })

@@ -28,8 +28,8 @@ export class RoleGuard implements CanActivate {
             return false;
           } else {
             const expectedRole = route.data.expectedRole;
-            if (user.role.id !== expectedRole) {
-              this.Router.navigate([`/${user.role.id}`]);
+            if (user.rol !== expectedRole) {
+              this.Router.navigate([`/${user.rol.toLowerCase()}`]);
               return false;
             } else {
               return true;

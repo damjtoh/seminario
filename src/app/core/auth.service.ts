@@ -31,13 +31,13 @@ export class AuthService {
     if (environment.production) {
       return this.http.post(`${environment.BASE_URL}/usuarios/login`, { email, password })
     } else {
-      let role = { id: 'medico', description: 'Médico' };
+      let rol = { id: 'medico', description: 'Médico' };
       switch (email) {
         case 'farmaceutico':
-          role = { id: 'farmaceutico', description: 'Farmaceutico' }
+          rol = { id: 'farmaceutico', description: 'Farmaceutico' }
           break;
         case 'enfermero':
-          role = { id: 'enfermero', description: 'Enfermero' }
+          rol = { id: 'enfermero', description: 'Enfermero' }
           break;
       }
       const response = {
@@ -47,7 +47,7 @@ export class AuthService {
           dni: '37356501',
           name: 'Pepe itaka',
           email: email,
-          role
+          rol
         }
       };
       return of(response).pipe(delay(5000));
@@ -57,14 +57,11 @@ export class AuthService {
   login(email: string, password: string) {
     return this.httpLogin(email, password)
       .pipe(
-        map((res: any) => {
-          const token = res.token;
-          const user = res.user;
-          localStorage.setItem('token', token);
+        map((user:User) => ({...user, rol: 'FARMACEUTICO'})),
+        map((user: User) => {
           localStorage.setItem('user', JSON.stringify(user));
           this.userSubject.next(user);
-          this.CookieService.put('authToken', token);
-          return res;
+          return user;
         })
       )
   }

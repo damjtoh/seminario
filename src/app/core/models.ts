@@ -1,9 +1,10 @@
 export interface User {
-  name: string,
+  nombre: string,
+  apellido: string,
   email: string,
   dni: string,
   id: string,
-  role: FarmaceuticoRole | MedicoRole
+  rol: 'farmaceutico' | 'medico' | 'enfermero'
 }
 
 export class FarmaceuticoRole {
