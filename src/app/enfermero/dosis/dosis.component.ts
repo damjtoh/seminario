@@ -59,4 +59,8 @@ export class DosisComponent implements OnInit {
       });
   }
 
+  goToDashboard() {
+    this.Router.navigate(['/']);
+  }
+
 }
